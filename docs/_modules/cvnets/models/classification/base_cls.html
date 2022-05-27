@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cvnets.models.classification.base_cls &mdash; CVNet: High Performance Library for Computer Vision  documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> CVNet: High Performance Library for Computer Vision
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../sample_recipes.html">Sample Recipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how_to.html">How To</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../data_samplers.html">Data Samplers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../en/general/README-model-zoo.html">Model Zoo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">CVNet: High Performance Library for Computer Vision</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../../models.html">cvnets.models</a> &raquo;</li>
+          <li><a href="../classification.html">cvnets.models.classification</a> &raquo;</li>
+      <li>cvnets.models.classification.base_cls</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cvnets.models.classification.base_cls</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># For licensing see accompanying LICENSE file.</span>
+<span class="c1"># Copyright (C) 2022 Apple Inc. All Rights Reserved.</span>
+<span class="c1">#</span>
+
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span><span class="p">,</span> <span class="n">Tensor</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">logger</span>
+
+<span class="kn">from</span> <span class="nn">...</span> <span class="kn">import</span> <span class="n">parameter_list</span>
+<span class="kn">from</span> <span class="nn">...layers</span> <span class="kn">import</span> <span class="n">norm_layers_tuple</span><span class="p">,</span> <span class="n">LinearLayer</span>
+<span class="kn">from</span> <span class="nn">...misc.profiler</span> <span class="kn">import</span> <span class="n">module_profile</span>
+<span class="kn">from</span> <span class="nn">...misc.init_utils</span> <span class="kn">import</span> <span class="n">initialize_weights</span><span class="p">,</span> <span class="n">initialize_fc_layer</span>
+
+
+<div class="viewcode-block" id="BaseEncoder"><a class="viewcode-back" href="../../../../autogen/cvnets.models.classification.html#cvnets.models.classification.base_cls.BaseEncoder">[docs]</a><span class="k">class</span> <span class="nc">BaseEncoder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for different classification models</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="BaseEncoder.__init__"><a class="viewcode-back" href="../../../../autogen/cvnets.models.classification.html#cvnets.models.classification.base_cls.BaseEncoder.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv_1</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_1</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_2</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_3</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_4</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_5</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv_1x1_exp</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">round_nearest</span> <span class="o">=</span> <span class="mi">8</span>
+
+        <span class="c1"># Segmentation architectures like Deeplab and PSPNet modifies the strides of the backbone</span>
+        <span class="c1"># We allow that using output_stride and replace_stride_with_dilation arguments</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dilation</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">output_stride</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;output_stride&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dilate_l4</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dilate_l5</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">output_stride</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dilate_l4</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dilate_l5</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">output_stride</span> <span class="o">==</span> <span class="mi">16</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dilate_l5</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_conf_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BaseEncoder.add_arguments"><a class="viewcode-back" href="../../../../autogen/cvnets.models.classification.html#cvnets.models.classification.base_cls.BaseEncoder.add_arguments">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add model-specific arguments&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">parser</span></div>
+
+<div class="viewcode-block" id="BaseEncoder.check_model"><a class="viewcode-back" href="../../../../autogen/cvnets.models.classification.html#cvnets.models.classification.base_cls.BaseEncoder.check_model">[docs]</a>    <span class="k">def</span> <span class="nf">check_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model_conf_dict</span>
+        <span class="p">),</span> <span class="s2">&quot;Model configuration dictionary should not be empty&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv_1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Please implement self.conv_1&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Please implement self.layer_1&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Please implement self.layer_2&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_3</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Please implement self.layer_3&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_4</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Please implement self.layer_4&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_5</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Please implement self.layer_5&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv_1x1_exp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Please implement self.conv_1x1_exp&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Please implement self.classifier&quot;</span></div>
+
+<div class="viewcode-block" id="BaseEncoder.reset_parameters"><a class="viewcode-back" href="../../../../autogen/cvnets.models.classification.html#cvnets.models.classification.base_cls.BaseEncoder.reset_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize model weights&quot;&quot;&quot;</span>
+        <span class="n">initialize_weights</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="n">opts</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="BaseEncoder.update_classifier"><a class="viewcode-back" href="../../../../autogen/cvnets.models.classification.html#cvnets.models.classification.base_cls.BaseEncoder.update_classifier">[docs]</a>    <span class="k">def</span> <span class="nf">update_classifier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function updates the classification layer in a model. Useful for finetuning purposes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">linear_init_type</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;model.layer.linear_init&quot;</span><span class="p">,</span> <span class="s2">&quot;normal&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">):</span>
+            <span class="n">in_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">in_features</span>
+            <span class="n">layer</span> <span class="o">=</span> <span class="n">LinearLayer</span><span class="p">(</span>
+                <span class="n">in_features</span><span class="o">=</span><span class="n">in_features</span><span class="p">,</span> <span class="n">out_features</span><span class="o">=</span><span class="n">n_classes</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+            <span class="n">initialize_fc_layer</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">init_method</span><span class="o">=</span><span class="n">linear_init_type</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">in_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">in_features</span>
+            <span class="n">layer</span> <span class="o">=</span> <span class="n">LinearLayer</span><span class="p">(</span>
+                <span class="n">in_features</span><span class="o">=</span><span class="n">in_features</span><span class="p">,</span> <span class="n">out_features</span><span class="o">=</span><span class="n">n_classes</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+            <span class="n">initialize_fc_layer</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">init_method</span><span class="o">=</span><span class="n">linear_init_type</span><span class="p">)</span>
+
+            <span class="c1"># re-init head</span>
+            <span class="n">head_init_scale</span> <span class="o">=</span> <span class="mf">0.001</span>
+            <span class="n">layer</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">mul_</span><span class="p">(</span><span class="n">head_init_scale</span><span class="p">)</span>
+            <span class="n">layer</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">mul_</span><span class="p">(</span><span class="n">head_init_scale</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span> <span class="o">=</span> <span class="n">layer</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="BaseEncoder.extract_end_points_all"><a class="viewcode-back" href="../../../../autogen/cvnets.models.classification.html#cvnets.models.classification.base_cls.BaseEncoder.extract_end_points_all">[docs]</a>    <span class="k">def</span> <span class="nf">extract_end_points_all</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">use_l5</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">use_l5_exp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
+        <span class="n">out_dict</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># Use dictionary over NamedTuple so that JIT is happy</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv_1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># 112 x112</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># 112 x112</span>
+        <span class="n">out_dict</span><span class="p">[</span><span class="s2">&quot;out_l1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># 56 x 56</span>
+        <span class="n">out_dict</span><span class="p">[</span><span class="s2">&quot;out_l2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># 28 x 28</span>
+        <span class="n">out_dict</span><span class="p">[</span><span class="s2">&quot;out_l3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_4</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># 14 x 14</span>
+        <span class="n">out_dict</span><span class="p">[</span><span class="s2">&quot;out_l4&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+
+        <span class="k">if</span> <span class="n">use_l5</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_5</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># 7 x 7</span>
+            <span class="n">out_dict</span><span class="p">[</span><span class="s2">&quot;out_l5&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+
+            <span class="k">if</span> <span class="n">use_l5_exp</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv_1x1_exp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                <span class="n">out_dict</span><span class="p">[</span><span class="s2">&quot;out_l5_exp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="k">return</span> <span class="n">out_dict</span></div>
+
+<div class="viewcode-block" id="BaseEncoder.extract_end_points_l4"><a class="viewcode-back" href="../../../../autogen/cvnets.models.classification.html#cvnets.models.classification.base_cls.BaseEncoder.extract_end_points_l4">[docs]</a>    <span class="k">def</span> <span class="nf">extract_end_points_l4</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_end_points_all</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">use_l5</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseEncoder.extract_features"><a class="viewcode-back" href="../../../../autogen/cvnets.models.classification.html#cvnets.models.classification.base_cls.BaseEncoder.extract_features">[docs]</a>    <span class="k">def</span> <span class="nf">extract_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv_1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_4</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_5</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv_1x1_exp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span></div>
+
+<div class="viewcode-block" id="BaseEncoder.forward"><a class="viewcode-back" href="../../../../autogen/cvnets.models.classification.html#cvnets.models.classification.base_cls.BaseEncoder.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_features</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span></div>
+
+<div class="viewcode-block" id="BaseEncoder.freeze_norm_layers"><a class="viewcode-back" href="../../../../autogen/cvnets.models.classification.html#cvnets.models.classification.base_cls.BaseEncoder.freeze_norm_layers">[docs]</a>    <span class="k">def</span> <span class="nf">freeze_norm_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Freeze normalization layers&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">norm_layers_tuple</span><span class="p">):</span>
+                <span class="n">m</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+                <span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">m</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">m</span><span class="o">.</span><span class="n">training</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="BaseEncoder.get_trainable_parameters"><a class="viewcode-back" href="../../../../autogen/cvnets.models.classification.html#cvnets.models.classification.base_cls.BaseEncoder.get_trainable_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">get_trainable_parameters</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">weight_decay</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">no_decay_bn_filter_bias</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get trainable parameters&quot;&quot;&quot;</span>
+        <span class="n">param_list</span> <span class="o">=</span> <span class="n">parameter_list</span><span class="p">(</span>
+            <span class="n">named_parameters</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">,</span>
+            <span class="n">weight_decay</span><span class="o">=</span><span class="n">weight_decay</span><span class="p">,</span>
+            <span class="n">no_decay_bn_filter_bias</span><span class="o">=</span><span class="n">no_decay_bn_filter_bias</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">param_list</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_list</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_profile_layers</span><span class="p">(</span>
+        <span class="n">layers</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">overall_params</span><span class="p">,</span> <span class="n">overall_macs</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layers</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">layers</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">layer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="nb">input</span><span class="p">,</span> <span class="n">layer_param</span><span class="p">,</span> <span class="n">layer_macs</span> <span class="o">=</span> <span class="n">module_profile</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="n">layer</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="nb">input</span><span class="p">)</span>
+
+            <span class="n">overall_params</span> <span class="o">+=</span> <span class="n">layer_param</span>
+            <span class="n">overall_macs</span> <span class="o">+=</span> <span class="n">layer_macs</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">):</span>
+                <span class="n">module_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">+&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">l</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">module_name</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="si">{:&lt;15}</span><span class="s2"> </span><span class="se">\t</span><span class="s2"> </span><span class="si">{:&lt;5}</span><span class="s2">: </span><span class="si">{:&gt;8.3f}</span><span class="s2"> M </span><span class="se">\t</span><span class="s2"> </span><span class="si">{:&lt;5}</span><span class="s2">: </span><span class="si">{:&gt;8.3f}</span><span class="s2"> M&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">module_name</span><span class="p">,</span>
+                    <span class="s2">&quot;Params&quot;</span><span class="p">,</span>
+                    <span class="nb">round</span><span class="p">(</span><span class="n">layer_param</span> <span class="o">/</span> <span class="mf">1e6</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+                    <span class="s2">&quot;MACs&quot;</span><span class="p">,</span>
+                    <span class="nb">round</span><span class="p">(</span><span class="n">layer_macs</span> <span class="o">/</span> <span class="mf">1e6</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">singe_dash_line</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">input</span><span class="p">,</span> <span class="n">overall_params</span><span class="p">,</span> <span class="n">overall_macs</span>
+
+<div class="viewcode-block" id="BaseEncoder.profile_model"><a class="viewcode-back" href="../../../../autogen/cvnets.models.classification.html#cvnets.models.classification.base_cls.BaseEncoder.profile_model">[docs]</a>    <span class="k">def</span> <span class="nf">profile_model</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">is_classification</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]],</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper function to profile a model.</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            Model profiling is for reference only and may contain errors as it solely relies on user implementation to</span>
+<span class="sd">            compute theoretical FLOPs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">overall_params</span><span class="p">,</span> <span class="n">overall_macs</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
+
+        <span class="n">input_fvcore</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">is_classification</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Model statistics for an input of size </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">size</span><span class="p">()))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">double_dash_line</span><span class="p">(</span><span class="n">dashes</span><span class="o">=</span><span class="mi">65</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:&gt;35}</span><span class="s2"> Summary&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">double_dash_line</span><span class="p">(</span><span class="n">dashes</span><span class="o">=</span><span class="mi">65</span><span class="p">)</span>
+
+        <span class="n">out_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="nb">input</span><span class="p">,</span> <span class="n">overall_params</span><span class="p">,</span> <span class="n">overall_macs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_profile_layers</span><span class="p">(</span>
+            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">conv_1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_1</span><span class="p">],</span>
+            <span class="nb">input</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span>
+            <span class="n">overall_params</span><span class="o">=</span><span class="n">overall_params</span><span class="p">,</span>
+            <span class="n">overall_macs</span><span class="o">=</span><span class="n">overall_macs</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">out_dict</span><span class="p">[</span><span class="s2">&quot;out_l1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">input</span>
+
+        <span class="nb">input</span><span class="p">,</span> <span class="n">overall_params</span><span class="p">,</span> <span class="n">overall_macs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_profile_layers</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layer_2</span><span class="p">,</span>
+            <span class="nb">input</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span>
+            <span class="n">overall_params</span><span class="o">=</span><span class="n">overall_params</span><span class="p">,</span>
+            <span class="n">overall_macs</span><span class="o">=</span><span class="n">overall_macs</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">out_dict</span><span class="p">[</span><span class="s2">&quot;out_l2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">input</span>
+
+        <span class="nb">input</span><span class="p">,</span> <span class="n">overall_params</span><span class="p">,</span> <span class="n">overall_macs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_profile_layers</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layer_3</span><span class="p">,</span>
+            <span class="nb">input</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span>
+            <span class="n">overall_params</span><span class="o">=</span><span class="n">overall_params</span><span class="p">,</span>
+            <span class="n">overall_macs</span><span class="o">=</span><span class="n">overall_macs</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">out_dict</span><span class="p">[</span><span class="s2">&quot;out_l3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">input</span>
+
+        <span class="nb">input</span><span class="p">,</span> <span class="n">overall_params</span><span class="p">,</span> <span class="n">overall_macs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_profile_layers</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layer_4</span><span class="p">,</span>
+            <span class="nb">input</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span>
+            <span class="n">overall_params</span><span class="o">=</span><span class="n">overall_params</span><span class="p">,</span>
+            <span class="n">overall_macs</span><span class="o">=</span><span class="n">overall_macs</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">out_dict</span><span class="p">[</span><span class="s2">&quot;out_l4&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">input</span>
+
+        <span class="nb">input</span><span class="p">,</span> <span class="n">overall_params</span><span class="p">,</span> <span class="n">overall_macs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_profile_layers</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layer_5</span><span class="p">,</span>
+            <span class="nb">input</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span>
+            <span class="n">overall_params</span><span class="o">=</span><span class="n">overall_params</span><span class="p">,</span>
+            <span class="n">overall_macs</span><span class="o">=</span><span class="n">overall_macs</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">out_dict</span><span class="p">[</span><span class="s2">&quot;out_l5&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">input</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv_1x1_exp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">input</span><span class="p">,</span> <span class="n">overall_params</span><span class="p">,</span> <span class="n">overall_macs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_profile_layers</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">conv_1x1_exp</span><span class="p">,</span>
+                <span class="nb">input</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span>
+                <span class="n">overall_params</span><span class="o">=</span><span class="n">overall_params</span><span class="p">,</span>
+                <span class="n">overall_macs</span><span class="o">=</span><span class="n">overall_macs</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">out_dict</span><span class="p">[</span><span class="s2">&quot;out_l5_exp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">input</span>
+
+        <span class="k">if</span> <span class="n">is_classification</span><span class="p">:</span>
+            <span class="n">classifier_params</span><span class="p">,</span> <span class="n">classifier_macs</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">input</span><span class="p">,</span> <span class="n">classifier_params</span><span class="p">,</span> <span class="n">classifier_macs</span> <span class="o">=</span> <span class="n">module_profile</span><span class="p">(</span>
+                    <span class="n">module</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="nb">input</span>
+                <span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="si">{:&lt;15}</span><span class="s2"> </span><span class="se">\t</span><span class="s2"> </span><span class="si">{:&lt;5}</span><span class="s2">: </span><span class="si">{:&gt;8.3f}</span><span class="s2"> M </span><span class="se">\t</span><span class="s2"> </span><span class="si">{:&lt;5}</span><span class="s2">: </span><span class="si">{:&gt;8.3f}</span><span class="s2"> M&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="s2">&quot;Classifier&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;Params&quot;</span><span class="p">,</span>
+                        <span class="nb">round</span><span class="p">(</span><span class="n">classifier_params</span> <span class="o">/</span> <span class="mf">1e6</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+                        <span class="s2">&quot;MACs&quot;</span><span class="p">,</span>
+                        <span class="nb">round</span><span class="p">(</span><span class="n">classifier_macs</span> <span class="o">/</span> <span class="mf">1e6</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="n">overall_params</span> <span class="o">+=</span> <span class="n">classifier_params</span>
+            <span class="n">overall_macs</span> <span class="o">+=</span> <span class="n">classifier_macs</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">double_dash_line</span><span class="p">(</span><span class="n">dashes</span><span class="o">=</span><span class="mi">65</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="si">{:&lt;20}</span><span class="s2"> = </span><span class="si">{:&gt;8.3f}</span><span class="s2"> M&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;Overall parameters&quot;</span><span class="p">,</span> <span class="n">overall_params</span> <span class="o">/</span> <span class="mf">1e6</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">overall_params_py</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">p</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">()])</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="si">{:&lt;20}</span><span class="s2"> = </span><span class="si">{:&gt;8.3f}</span><span class="s2"> M&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="s2">&quot;Overall parameters (sanity check)&quot;</span><span class="p">,</span> <span class="n">overall_params_py</span> <span class="o">/</span> <span class="mf">1e6</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Counting Addition and Multiplication as 1 operation</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="si">{:&lt;20}</span><span class="s2"> = </span><span class="si">{:&gt;8.3f}</span><span class="s2"> M&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="s2">&quot;Overall MACs (theoretical)&quot;</span><span class="p">,</span> <span class="n">overall_macs</span> <span class="o">/</span> <span class="mf">1e6</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="c1"># compute flops using FVCore</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># compute flops using FVCore also</span>
+                <span class="kn">from</span> <span class="nn">fvcore.nn</span> <span class="kn">import</span> <span class="n">FlopCountAnalysis</span>
+
+                <span class="n">flop_analyzer</span> <span class="o">=</span> <span class="n">FlopCountAnalysis</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eval</span><span class="p">(),</span> <span class="n">input_fvcore</span><span class="p">)</span>
+                <span class="n">flop_analyzer</span><span class="o">.</span><span class="n">unsupported_ops_warnings</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">flop_analyzer</span><span class="o">.</span><span class="n">uncalled_modules_warnings</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">flops_fvcore</span> <span class="o">=</span> <span class="n">flop_analyzer</span><span class="o">.</span><span class="n">total</span><span class="p">()</span>
+
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="si">{:&lt;20}</span><span class="s2"> = </span><span class="si">{:&gt;8.3f}</span><span class="s2"> M&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="s2">&quot;Overall MACs (FVCore)**&quot;</span><span class="p">,</span> <span class="n">flops_fvcore</span> <span class="o">/</span> <span class="mf">1e6</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">** Theoretical and FVCore MACs may vary as theoretical MACs do not account &quot;</span>
+                    <span class="s2">&quot;for certain operations which may or may not be accounted in FVCore&quot;</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Note: Theoretical MACs depends on user-implementation. Be cautious&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">double_dash_line</span><span class="p">(</span><span class="n">dashes</span><span class="o">=</span><span class="mi">65</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">out_dict</span><span class="p">,</span> <span class="n">overall_params</span><span class="p">,</span> <span class="n">overall_macs</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (C) 2022 Apple Inc. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Training Classification Models on the ImageNet dataset &mdash; CVNet: High Performance Library for Computer Vision  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> CVNet: High Performance Library for Computer Vision
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sample_recipes.html">Sample Recipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to.html">How To</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../data_samplers.html">Data Samplers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../general/README-model-zoo.html">Model Zoo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">CVNet: High Performance Library for Computer Vision</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Training Classification Models on the ImageNet dataset</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/en/models/classification/README-vit.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="tex2jax_ignore mathjax_ignore section" id="training-classification-models-on-the-imagenet-dataset">
+<h1>Training Classification Models on the ImageNet dataset<a class="headerlink" href="#training-classification-models-on-the-imagenet-dataset" title="Permalink to this headline"></a></h1>
+<div class="section" id="training-visual-transformer-on-the-imagenet-dataset">
+<h2>Training Visual Transformer on the ImageNet dataset<a class="headerlink" href="#training-visual-transformer-on-the-imagenet-dataset" title="Permalink to this headline"></a></h2>
+<p>Single node 4-GPU training of <code class="docutils literal notranslate"><span class="pre">ViT-Tiny</span></code> can be done using below command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export CFG_FILE=&quot;config/classification/imagenet/vit.yaml&quot;
+cvnets-train --common.config-file $CFG_FILE --common.results-loc classification_results
+</pre></div>
+</div>
+<p><em><strong>Note</strong></em>: Do not forget to change the training and validation dataset locations in configuration files.</p>
+</div>
+<div class="section" id="citation">
+<h2>Citation<a class="headerlink" href="#citation" title="Permalink to this headline"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@article</span><span class="p">{</span><span class="n">dosovitskiy2020image</span><span class="p">,</span>
+  <span class="n">title</span><span class="o">=</span><span class="p">{</span><span class="n">An</span> <span class="n">image</span> <span class="ow">is</span> <span class="n">worth</span> <span class="mi">16</span><span class="n">x16</span> <span class="n">words</span><span class="p">:</span> <span class="n">Transformers</span> <span class="k">for</span> <span class="n">image</span> <span class="n">recognition</span> <span class="n">at</span> <span class="n">scale</span><span class="p">},</span>
+  <span class="n">author</span><span class="o">=</span><span class="p">{</span><span class="n">Dosovitskiy</span><span class="p">,</span> <span class="n">Alexey</span> <span class="ow">and</span> <span class="n">Beyer</span><span class="p">,</span> <span class="n">Lucas</span> <span class="ow">and</span> <span class="n">Kolesnikov</span><span class="p">,</span> <span class="n">Alexander</span> <span class="ow">and</span> <span class="n">Weissenborn</span><span class="p">,</span> <span class="n">Dirk</span> <span class="ow">and</span> <span class="n">Zhai</span><span class="p">,</span> <span class="n">Xiaohua</span> <span class="ow">and</span> <span class="n">Unterthiner</span><span class="p">,</span> <span class="n">Thomas</span> <span class="ow">and</span> <span class="n">Dehghani</span><span class="p">,</span> <span class="n">Mostafa</span> <span class="ow">and</span> <span class="n">Minderer</span><span class="p">,</span> <span class="n">Matthias</span> <span class="ow">and</span> <span class="n">Heigold</span><span class="p">,</span> <span class="n">Georg</span> <span class="ow">and</span> <span class="n">Gelly</span><span class="p">,</span> <span class="n">Sylvain</span> <span class="ow">and</span> <span class="n">others</span><span class="p">},</span>
+  <span class="n">journal</span><span class="o">=</span><span class="p">{</span><span class="n">arXiv</span> <span class="n">preprint</span> <span class="n">arXiv</span><span class="p">:</span><span class="mf">2010.11929</span><span class="p">},</span>
+  <span class="n">year</span><span class="o">=</span><span class="p">{</span><span class="mi">2020</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@inproceedings</span><span class="p">{</span><span class="n">touvron2021training</span><span class="p">,</span>
+  <span class="n">title</span><span class="o">=</span><span class="p">{</span><span class="n">Training</span> <span class="n">data</span><span class="o">-</span><span class="n">efficient</span> <span class="n">image</span> <span class="n">transformers</span> \<span class="o">&amp;</span> <span class="n">distillation</span> <span class="n">through</span> <span class="n">attention</span><span class="p">},</span>
+  <span class="n">author</span><span class="o">=</span><span class="p">{</span><span class="n">Touvron</span><span class="p">,</span> <span class="n">Hugo</span> <span class="ow">and</span> <span class="n">Cord</span><span class="p">,</span> <span class="n">Matthieu</span> <span class="ow">and</span> <span class="n">Douze</span><span class="p">,</span> <span class="n">Matthijs</span> <span class="ow">and</span> <span class="n">Massa</span><span class="p">,</span> <span class="n">Francisco</span> <span class="ow">and</span> <span class="n">Sablayrolles</span><span class="p">,</span> <span class="n">Alexandre</span> <span class="ow">and</span> <span class="n">J</span><span class="p">{</span>\<span class="s1">&#39;e}gou, Herv{</span><span class="se">\&#39;</span><span class="s1">e}},</span>
+  <span class="n">booktitle</span><span class="o">=</span><span class="p">{</span><span class="n">International</span> <span class="n">Conference</span> <span class="n">on</span> <span class="n">Machine</span> <span class="n">Learning</span><span class="p">},</span>
+  <span class="n">pages</span><span class="o">=</span><span class="p">{</span><span class="mi">10347</span><span class="o">--</span><span class="mi">10357</span><span class="p">},</span>
+  <span class="n">year</span><span class="o">=</span><span class="p">{</span><span class="mi">2021</span><span class="p">},</span>
+  <span class="n">organization</span><span class="o">=</span><span class="p">{</span><span class="n">PMLR</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (C) 2022 Apple Inc. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

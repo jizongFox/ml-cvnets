@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cvnets.models.detection &mdash; CVNet: High Performance Library for Computer Vision  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> CVNet: High Performance Library for Computer Vision
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sample_recipes.html">Sample Recipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to.html">How To</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../data_samplers.html">Data Samplers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../en/general/README-model-zoo.html">Model Zoo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">CVNet: High Performance Library for Computer Vision</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../models.html">cvnets.models</a> &raquo;</li>
+      <li>cvnets.models.detection</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cvnets.models.detection</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># For licensing see accompanying LICENSE file.</span>
+<span class="c1"># Copyright (C) 2022 Apple Inc. All Rights Reserved.</span>
+<span class="c1">#</span>
+
+<span class="kn">from</span> <span class="nn">.base_detection</span> <span class="kn">import</span> <span class="n">BaseDetection</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="kn">from</span> <span class="nn">utils.download_utils</span> <span class="kn">import</span> <span class="n">get_local_path</span>
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">utils.ddp_utils</span> <span class="kn">import</span> <span class="n">is_master</span><span class="p">,</span> <span class="n">is_start_rank_node</span>
+<span class="kn">from</span> <span class="nn">utils.common_utils</span> <span class="kn">import</span> <span class="n">check_frozen_norm_layer</span>
+
+<span class="kn">from</span> <span class="nn">...misc.common</span> <span class="kn">import</span> <span class="n">load_pretrained_model</span>
+<span class="kn">from</span> <span class="nn">...models.classification</span> <span class="kn">import</span> <span class="n">build_classification_model</span>
+
+
+<span class="n">DETECT_MODEL_REGISTRY</span> <span class="o">=</span> <span class="p">{}</span>
+
+
+<div class="viewcode-block" id="register_detection_models"><a class="viewcode-back" href="../../../autogen/cvnets.models.detection.html#cvnets.models.detection.register_detection_models">[docs]</a><span class="k">def</span> <span class="nf">register_detection_models</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">register_model_class</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">DETECT_MODEL_REGISTRY</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot register duplicate model (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">BaseDetection</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Model (</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">) must extend BaseDetection&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="n">DETECT_MODEL_REGISTRY</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span>
+        <span class="k">return</span> <span class="bp">cls</span>
+
+    <span class="k">return</span> <span class="n">register_model_class</span></div>
+
+
+<div class="viewcode-block" id="build_detection_model"><a class="viewcode-back" href="../../../autogen/cvnets.models.detection.html#cvnets.models.detection.build_detection_model">[docs]</a><span class="k">def</span> <span class="nf">build_detection_model</span><span class="p">(</span><span class="n">opts</span><span class="p">):</span>
+    <span class="n">seg_model_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;model.detection.name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">is_master_node</span> <span class="o">=</span> <span class="n">is_master</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">seg_model_name</span> <span class="ow">in</span> <span class="n">DETECT_MODEL_REGISTRY</span><span class="p">:</span>
+        <span class="n">output_stride</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;model.detection.output_stride&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">encoder</span> <span class="o">=</span> <span class="n">build_classification_model</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="n">opts</span><span class="p">,</span> <span class="n">output_stride</span><span class="o">=</span><span class="n">output_stride</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">DETECT_MODEL_REGISTRY</span><span class="p">[</span><span class="n">seg_model_name</span><span class="p">](</span><span class="n">opts</span><span class="p">,</span> <span class="n">encoder</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">supported_models</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">DETECT_MODEL_REGISTRY</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">supp_model_str</span> <span class="o">=</span> <span class="s2">&quot;Supported detection models are:&quot;</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">m_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">supported_models</span><span class="p">):</span>
+            <span class="n">supp_model_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2"> </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">logger</span><span class="o">.</span><span class="n">color_text</span><span class="p">(</span><span class="n">m_name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">is_master_node</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">supp_model_str</span><span class="p">)</span>
+
+    <span class="n">pretrained</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;model.detection.pretrained&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">pretrained</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pretrained</span> <span class="o">=</span> <span class="n">get_local_path</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">pretrained</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">load_pretrained_model</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">wt_loc</span><span class="o">=</span><span class="n">pretrained</span><span class="p">,</span> <span class="n">is_master_node</span><span class="o">=</span><span class="n">is_start_rank_node</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="n">freeze_norm_layers</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;model.detection.freeze_batch_norm&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">freeze_norm_layers</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">freeze_norm_layers</span><span class="p">()</span>
+        <span class="n">frozen_state</span><span class="p">,</span> <span class="n">count_norm</span> <span class="o">=</span> <span class="n">check_frozen_norm_layer</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">count_norm</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">frozen_state</span> <span class="ow">and</span> <span class="n">is_master_node</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;Something is wrong while freezing normalization layers. Please check&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">is_master_node</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Normalization layers are frozen&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">model</span></div>
+
+
+<div class="viewcode-block" id="common_detection_args"><a class="viewcode-back" href="../../../autogen/cvnets.models.detection.html#cvnets.models.detection.common_detection_args">[docs]</a><span class="k">def</span> <span class="nf">common_detection_args</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">):</span>
+    <span class="n">group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Detection arguments&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Detection arguments&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--model.detection.name&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Model name&quot;</span>
+    <span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--model.detection.n-classes&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Number of classes in the dataset&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--model.detection.pretrained&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path of the pretrained model&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--model.detection.output-stride&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output stride in classification network&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--model.detection.replace-stride-with-dilation&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Replace stride with dilation&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--model.detection.freeze-batch-norm&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Freeze batch norm layers&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parser</span></div>
+
+
+<div class="viewcode-block" id="arguments_detection"><a class="viewcode-back" href="../../../autogen/cvnets.models.detection.html#cvnets.models.detection.arguments_detection">[docs]</a><span class="k">def</span> <span class="nf">arguments_detection</span><span class="p">(</span><span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">):</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">common_detection_args</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+
+    <span class="c1"># add segmentation specific arguments</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">DETECT_MODEL_REGISTRY</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">add_arguments</span><span class="p">(</span><span class="n">parser</span><span class="o">=</span><span class="n">parser</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parser</span></div>
+
+
+<span class="c1"># automatically import the models</span>
+<span class="n">models_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">models_dir</span><span class="p">):</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">models_dir</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="ow">not</span> <span class="n">file</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="ow">not</span> <span class="n">file</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+    <span class="p">):</span>
+        <span class="n">model_name</span> <span class="o">=</span> <span class="n">file</span><span class="p">[:</span> <span class="n">file</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">file</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s2">&quot;cvnets.models.detection.&quot;</span> <span class="o">+</span> <span class="n">model_name</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (C) 2022 Apple Inc. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

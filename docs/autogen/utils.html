@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>utils package &mdash; CVNet: High Performance Library for Computer Vision  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> CVNet: High Performance Library for Computer Vision
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sample_recipes.html">Sample Recipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how_to.html">How To</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_samplers.html">Data Samplers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../en/general/README-model-zoo.html">Model Zoo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CVNet: High Performance Library for Computer Vision</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>utils package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/autogen/utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="utils-package">
+<h1>utils package<a class="headerlink" href="#utils-package" title="Permalink to this headline"></a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="module-utils.checkpoint_utils">
+<span id="utils-checkpoint-utils-module"></span><h2>utils.checkpoint_utils module<a class="headerlink" href="#module-utils.checkpoint_utils" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.checkpoint_utils.get_model_state_dict">
+<span class="sig-prename descclassname"><span class="pre">utils.checkpoint_utils.</span></span><span class="sig-name descname"><span class="pre">get_model_state_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils/checkpoint_utils.html#get_model_state_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.checkpoint_utils.get_model_state_dict" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.checkpoint_utils.load_state_dict">
+<span class="sig-prename descclassname"><span class="pre">utils.checkpoint_utils.</span></span><span class="sig-name descname"><span class="pre">load_state_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils/checkpoint_utils.html#load_state_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.checkpoint_utils.load_state_dict" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.checkpoint_utils.average_ckpts">
+<span class="sig-prename descclassname"><span class="pre">utils.checkpoint_utils.</span></span><span class="sig-name descname"><span class="pre">average_ckpts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ckpt_loc_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils/checkpoint_utils.html#average_ckpts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.checkpoint_utils.average_ckpts" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.checkpoint_utils.avg_n_save_k_checkpoints">
+<span class="sig-prename descclassname"><span class="pre">utils.checkpoint_utils.</span></span><span class="sig-name descname"><span class="pre">avg_n_save_k_checkpoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">best_metric</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_best_checkpoints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_ckpt_metric</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ckpt_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils/checkpoint_utils.html#avg_n_save_k_checkpoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.checkpoint_utils.avg_n_save_k_checkpoints" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.checkpoint_utils.save_checkpoint">
+<span class="sig-prename descclassname"><span class="pre">utils.checkpoint_utils.</span></span><span class="sig-name descname"><span class="pre">save_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.nn.modules.module.Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="optim.html#optim.base_optim.BaseOptim" title="optim.base_optim.BaseOptim"><span class="pre">optim.base_optim.BaseOptim</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.optim.optimizer.Optimizer</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">best_metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_best</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient_scalar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.cuda.amp.grad_scaler.GradScaler</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_ema</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">torch.nn.modules.module.Module</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_ema_best</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ema_best_metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_ckpt_metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_best_checkpoints</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_all_checkpoints</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/utils/checkpoint_utils.html#save_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.checkpoint_utils.save_checkpoint" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.checkpoint_utils.load_checkpoint">
+<span class="sig-prename descclassname"><span class="pre">utils.checkpoint_utils.</span></span><span class="sig-name descname"><span class="pre">load_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.nn.modules.module.Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="optim.html#optim.base_optim.BaseOptim" title="optim.base_optim.BaseOptim"><span class="pre">optim.base_optim.BaseOptim</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.optim.optimizer.Optimizer</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient_scalar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.cuda.amp.grad_scaler.GradScaler</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_ema</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">torch.nn.modules.module.Module</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils/checkpoint_utils.html#load_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.checkpoint_utils.load_checkpoint" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.checkpoint_utils.load_model_state">
+<span class="sig-prename descclassname"><span class="pre">utils.checkpoint_utils.</span></span><span class="sig-name descname"><span class="pre">load_model_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_ema</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils/checkpoint_utils.html#load_model_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.checkpoint_utils.load_model_state" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.checkpoint_utils.copy_weights">
+<span class="sig-prename descclassname"><span class="pre">utils.checkpoint_utils.</span></span><span class="sig-name descname"><span class="pre">copy_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_src</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.nn.modules.module.Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_tgt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.nn.modules.module.Module</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.nn.modules.module.Module</span></span></span><a class="reference internal" href="../_modules/utils/checkpoint_utils.html#copy_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.checkpoint_utils.copy_weights" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-utils.color_map">
+<span id="utils-color-map-module"></span><h2>utils.color_map module<a class="headerlink" href="#module-utils.color_map" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.color_map.Colormap">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.color_map.</span></span><span class="sig-name descname"><span class="pre">Colormap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">256</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalized</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils/color_map.html#Colormap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.color_map.Colormap" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Generate colormap for visualizing segmentation masks or bounding boxes.</p>
+<dl class="simple">
+<dt>This is based on the MATLab code in the PASCAL VOC repository:</dt><dd><p><a class="reference external" href="http://host.robots.ox.ac.uk/pascal/VOC/voc2012/index.html#devkit">http://host.robots.ox.ac.uk/pascal/VOC/voc2012/index.html#devkit</a></p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.color_map.Colormap.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">256</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalized</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils/color_map.html#Colormap.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.color_map.Colormap.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.color_map.Colormap.get_bit_at_idx">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_bit_at_idx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils/color_map.html#Colormap.get_bit_at_idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.color_map.Colormap.get_bit_at_idx" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.color_map.Colormap.get_color_map">
+<span class="sig-name descname"><span class="pre">get_color_map</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="../_modules/utils/color_map.html#Colormap.get_color_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.color_map.Colormap.get_color_map" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.color_map.Colormap.get_box_color_codes">
+<span class="sig-name descname"><span class="pre">get_box_color_codes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span></span></span><a class="reference internal" href="../_modules/utils/color_map.html#Colormap.get_box_color_codes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.color_map.Colormap.get_box_color_codes" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.color_map.Colormap.get_color_map_list">
+<span class="sig-name descname"><span class="pre">get_color_map_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span></span></span><a class="reference internal" href="../_modules/utils/color_map.html#Colormap.get_color_map_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.color_map.Colormap.get_color_map_list" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-utils.common_utils">
+<span id="utils-common-utils-module"></span><h2>utils.common_utils module<a class="headerlink" href="#module-utils.common_utils" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.common_utils.check_compatibility">
+<span class="sig-prename descclassname"><span class="pre">utils.common_utils.</span></span><span class="sig-name descname"><span class="pre">check_compatibility</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils/common_utils.html#check_compatibility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.common_utils.check_compatibility" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.common_utils.check_frozen_norm_layer">
+<span class="sig-prename descclassname"><span class="pre">utils.common_utils.</span></span><span class="sig-name descname"><span class="pre">check_frozen_norm_layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model:</span> <span class="pre">torch.nn.modules.module.Module)</span> <span class="pre">-&gt;</span> <span class="pre">(&lt;class</span> <span class="pre">'bool'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'int'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils/common_utils.html#check_frozen_norm_layer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.common_utils.check_frozen_norm_layer" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.common_utils.device_setup">
+<span class="sig-prename descclassname"><span class="pre">utils.common_utils.</span></span><span class="sig-name descname"><span class="pre">device_setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils/common_utils.html#device_setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.common_utils.device_setup" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.common_utils.create_directories">
+<span class="sig-prename descclassname"><span class="pre">utils.common_utils.</span></span><span class="sig-name descname"><span class="pre">create_directories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_master_node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/utils/common_utils.html#create_directories"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.common_utils.create_directories" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.common_utils.move_to_device">
+<span class="sig-prename descclassname"><span class="pre">utils.common_utils.</span></span><span class="sig-name descname"><span class="pre">move_to_device</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_blocking</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/utils/common_utils.html#move_to_device"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.common_utils.move_to_device" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.common_utils.is_coreml_conversion">
+<span class="sig-prename descclassname"><span class="pre">utils.common_utils.</span></span><span class="sig-name descname"><span class="pre">is_coreml_conversion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/utils/common_utils.html#is_coreml_conversion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.common_utils.is_coreml_conversion" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-utils.ddp_utils">
+<span id="utils-ddp-utils-module"></span><h2>utils.ddp_utils module<a class="headerlink" href="#module-utils.ddp_utils" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.ddp_utils.is_master">
+<span class="sig-prename descclassname"><span class="pre">utils.ddp_utils.</span></span><span class="sig-name descname"><span class="pre">is_master</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/utils/ddp_utils.html#is_master"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.ddp_utils.is_master" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.ddp_utils.dist_barrier">
+<span class="sig-prename descclassname"><span class="pre">utils.ddp_utils.</span></span><span class="sig-name descname"><span class="pre">dist_barrier</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils/ddp_utils.html#dist_barrier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.ddp_utils.dist_barrier" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.ddp_utils.is_start_rank_node">
+<span class="sig-prename descclassname"><span class="pre">utils.ddp_utils.</span></span><span class="sig-name descname"><span class="pre">is_start_rank_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/utils/ddp_utils.html#is_start_rank_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.ddp_utils.is_start_rank_node" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.ddp_utils.distributed_init">
+<span class="sig-prename descclassname"><span class="pre">utils.ddp_utils.</span></span><span class="sig-name descname"><span class="pre">distributed_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/utils/ddp_utils.html#distributed_init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.ddp_utils.distributed_init" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-utils.download_utils">
+<span id="utils-download-utils-module"></span><h2>utils.download_utils module<a class="headerlink" href="#module-utils.download_utils" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.download_utils.get_local_path">
+<span class="sig-prename descclassname"><span class="pre">utils.download_utils.</span></span><span class="sig-name descname"><span class="pre">get_local_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils/download_utils.html#get_local_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.download_utils.get_local_path" title="Permalink to this definition"></a></dt>
+<dd><p>If File name is a URL, download to TMP_CACHE_LOC and then return the local path. Otherwise, don’t do anything</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-utils.logger">
+<span id="utils-logger-module"></span><h2>utils.logger module<a class="headerlink" href="#module-utils.logger" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.logger.get_curr_time_stamp">
+<span class="sig-prename descclassname"><span class="pre">utils.logger.</span></span><span class="sig-name descname"><span class="pre">get_curr_time_stamp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/utils/logger.html#get_curr_time_stamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.logger.get_curr_time_stamp" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.logger.error">
+<span class="sig-prename descclassname"><span class="pre">utils.logger.</span></span><span class="sig-name descname"><span class="pre">error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/utils/logger.html#error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.logger.error" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.logger.color_text">
+<span class="sig-prename descclassname"><span class="pre">utils.logger.</span></span><span class="sig-name descname"><span class="pre">color_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/utils/logger.html#color_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.logger.color_text" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.logger.log">
+<span class="sig-prename descclassname"><span class="pre">utils.logger.</span></span><span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/utils/logger.html#log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.logger.log" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.logger.warning">
+<span class="sig-prename descclassname"><span class="pre">utils.logger.</span></span><span class="sig-name descname"><span class="pre">warning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/utils/logger.html#warning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.logger.warning" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.logger.info">
+<span class="sig-prename descclassname"><span class="pre">utils.logger.</span></span><span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/utils/logger.html#info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.logger.info" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.logger.debug">
+<span class="sig-prename descclassname"><span class="pre">utils.logger.</span></span><span class="sig-name descname"><span class="pre">debug</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/utils/logger.html#debug"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.logger.debug" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.logger.double_dash_line">
+<span class="sig-prename descclassname"><span class="pre">utils.logger.</span></span><span class="sig-name descname"><span class="pre">double_dash_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dashes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">75</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/utils/logger.html#double_dash_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.logger.double_dash_line" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.logger.singe_dash_line">
+<span class="sig-prename descclassname"><span class="pre">utils.logger.</span></span><span class="sig-name descname"><span class="pre">singe_dash_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dashes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">67</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/utils/logger.html#singe_dash_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.logger.singe_dash_line" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.logger.print_header">
+<span class="sig-prename descclassname"><span class="pre">utils.logger.</span></span><span class="sig-name descname"><span class="pre">print_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/utils/logger.html#print_header"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.logger.print_header" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.logger.print_header_minor">
+<span class="sig-prename descclassname"><span class="pre">utils.logger.</span></span><span class="sig-name descname"><span class="pre">print_header_minor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/utils/logger.html#print_header_minor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.logger.print_header_minor" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.logger.disable_printing">
+<span class="sig-prename descclassname"><span class="pre">utils.logger.</span></span><span class="sig-name descname"><span class="pre">disable_printing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils/logger.html#disable_printing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.logger.disable_printing" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.logger.enable_printing">
+<span class="sig-prename descclassname"><span class="pre">utils.logger.</span></span><span class="sig-name descname"><span class="pre">enable_printing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils/logger.html#enable_printing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.logger.enable_printing" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-utils.math_utils">
+<span id="utils-math-utils-module"></span><h2>utils.math_utils module<a class="headerlink" href="#module-utils.math_utils" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.math_utils.make_divisible">
+<span class="sig-prename descclassname"><span class="pre">utils.math_utils.</span></span><span class="sig-name descname"><span class="pre">make_divisible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">divisor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/utils/math_utils.html#make_divisible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.math_utils.make_divisible" title="Permalink to this definition"></a></dt>
+<dd><p>This function is taken from the original tf repo.
+It ensures that all layers have a channel number that is divisible by 8
+It can be seen here:
+<a class="reference external" href="https://github.com/tensorflow/models/blob/master/research/slim/nets/mobilenet/mobilenet.py">https://github.com/tensorflow/models/blob/master/research/slim/nets/mobilenet/mobilenet.py</a>
+:param v:
+:param divisor:
+:param min_value:
+:return:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.math_utils.bound_fn">
+<span class="sig-prename descclassname"><span class="pre">utils.math_utils.</span></span><span class="sig-name descname"><span class="pre">bound_fn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/utils/math_utils.html#bound_fn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.math_utils.bound_fn" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-utils.pytorch_to_coreml">
+<span id="utils-pytorch-to-coreml-module"></span><h2>utils.pytorch_to_coreml module<a class="headerlink" href="#module-utils.pytorch_to_coreml" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.pytorch_to_coreml.convert_pytorch_to_coreml">
+<span class="sig-prename descclassname"><span class="pre">utils.pytorch_to_coreml.</span></span><span class="sig-name descname"><span class="pre">convert_pytorch_to_coreml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pytorch_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.nn.modules.module.Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jit_model_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/utils/pytorch_to_coreml.html#convert_pytorch_to_coreml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.pytorch_to_coreml.convert_pytorch_to_coreml" title="Permalink to this definition"></a></dt>
+<dd><p>Convert Pytorch model to CoreML</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>opts</strong> – Arguments</p></li>
+<li><p><strong>pytorch_model</strong> – Pytorch model that needs to be converted to JIT or CoreML</p></li>
+<li><p><strong>input_tensor</strong> – Input tensor, usually a 4-dimensional tensor of shape Batch x 3 x Height x Width</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>CoreML model or package</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.pytorch_to_coreml.assertion_check">
+<span class="sig-prename descclassname"><span class="pre">utils.pytorch_to_coreml.</span></span><span class="sig-name descname"><span class="pre">assertion_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">py_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jit_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/utils/pytorch_to_coreml.html#assertion_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.pytorch_to_coreml.assertion_check" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-utils.tensor_utils">
+<span id="utils-tensor-utils-module"></span><h2>utils.tensor_utils module<a class="headerlink" href="#module-utils.tensor_utils" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.tensor_utils.image_size_from_opts">
+<span class="sig-prename descclassname"><span class="pre">utils.tensor_utils.</span></span><span class="sig-name descname"><span class="pre">image_size_from_opts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/utils/tensor_utils.html#image_size_from_opts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.tensor_utils.image_size_from_opts" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.tensor_utils.video_size_from_opts">
+<span class="sig-prename descclassname"><span class="pre">utils.tensor_utils.</span></span><span class="sig-name descname"><span class="pre">video_size_from_opts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/utils/tensor_utils.html#video_size_from_opts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.tensor_utils.video_size_from_opts" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.tensor_utils.create_rand_tensor">
+<span class="sig-prename descclassname"><span class="pre">utils.tensor_utils.</span></span><span class="sig-name descname"><span class="pre">create_rand_tensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="reference internal" href="../_modules/utils/tensor_utils.html#create_rand_tensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.tensor_utils.create_rand_tensor" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.tensor_utils.reduce_tensor">
+<span class="sig-prename descclassname"><span class="pre">utils.tensor_utils.</span></span><span class="sig-name descname"><span class="pre">reduce_tensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp_tensor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="reference internal" href="../_modules/utils/tensor_utils.html#reduce_tensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.tensor_utils.reduce_tensor" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.tensor_utils.reduce_tensor_sum">
+<span class="sig-prename descclassname"><span class="pre">utils.tensor_utils.</span></span><span class="sig-name descname"><span class="pre">reduce_tensor_sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp_tensor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="reference internal" href="../_modules/utils/tensor_utils.html#reduce_tensor_sum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.tensor_utils.reduce_tensor_sum" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.tensor_utils.all_gather_list">
+<span class="sig-prename descclassname"><span class="pre">utils.tensor_utils.</span></span><span class="sig-name descname"><span class="pre">all_gather_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils/tensor_utils.html#all_gather_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.tensor_utils.all_gather_list" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.tensor_utils.tensor_to_python_float">
+<span class="sig-prename descclassname"><span class="pre">utils.tensor_utils.</span></span><span class="sig-name descname"><span class="pre">tensor_to_python_float</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp_tensor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_distributed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/utils/tensor_utils.html#tensor_to_python_float"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.tensor_utils.tensor_to_python_float" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.tensor_utils.to_numpy">
+<span class="sig-prename descclassname"><span class="pre">utils.tensor_utils.</span></span><span class="sig-name descname"><span class="pre">to_numpy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img_tensor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="../_modules/utils/tensor_utils.html#to_numpy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.tensor_utils.to_numpy" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-utils.visualization_utils">
+<span id="utils-visualization-utils-module"></span><h2>utils.visualization_utils module<a class="headerlink" href="#module-utils.visualization_utils" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.visualization_utils.visualize_boxes_xyxy">
+<span class="sig-prename descclassname"><span class="pre">utils.visualization_utils.</span></span><span class="sig-name descname"><span class="pre">visualize_boxes_xyxy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boxes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="../_modules/utils/visualization_utils.html#visualize_boxes_xyxy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.visualization_utils.visualize_boxes_xyxy" title="Permalink to this definition"></a></dt>
+<dd><p>Utility function to draw bounding boxes of objects on a given image</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.visualization_utils.draw_bounding_boxes">
+<span class="sig-prename descclassname"><span class="pre">utils.visualization_utils.</span></span><span class="sig-name descname"><span class="pre">draw_bounding_boxes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boxes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_bgr_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/utils/visualization_utils.html#draw_bounding_boxes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.visualization_utils.draw_bounding_boxes" title="Permalink to this definition"></a></dt>
+<dd><p>Utility function to draw bounding boxes of objects along with their labels and score on a given image</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.visualization_utils.convert_to_cityscape_format">
+<span class="sig-prename descclassname"><span class="pre">utils.visualization_utils.</span></span><span class="sig-name descname"><span class="pre">convert_to_cityscape_format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="reference internal" href="../_modules/utils/visualization_utils.html#convert_to_cityscape_format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.visualization_utils.convert_to_cityscape_format" title="Permalink to this definition"></a></dt>
+<dd><p>Utility to map predicted segmentation labels to cityscapes format</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-utils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-utils" title="Permalink to this headline"></a></h2>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (C) 2022 Apple Inc. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

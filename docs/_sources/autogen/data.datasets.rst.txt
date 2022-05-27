@@ -1,0 +1,32 @@
+data.datasets package
+=====================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   data.datasets.classification
+   data.datasets.detection
+   data.datasets.segmentation
+   data.datasets.video_classification
+
+Submodules
+----------
+
+data.datasets.dataset\_base module
+----------------------------------
+
+.. automodule:: data.datasets.dataset_base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: data.datasets
+   :members:
+   :undoc-members:
+   :show-inheritance:

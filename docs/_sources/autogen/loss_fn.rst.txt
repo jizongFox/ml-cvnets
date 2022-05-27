@@ -1,0 +1,64 @@
+loss\_fn package
+================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   loss_fn.classification_loss_fns
+   loss_fn.detection_loss_fns
+   loss_fn.distillation_loss_fns
+   loss_fn.segmentation_loss_fns
+
+Submodules
+----------
+
+loss\_fn.base\_criteria module
+------------------------------
+
+.. automodule:: loss_fn.base_criteria
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+loss\_fn.classification module
+------------------------------
+
+.. automodule:: loss_fn.classification
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+loss\_fn.detection module
+-------------------------
+
+.. automodule:: loss_fn.detection
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+loss\_fn.distillation module
+----------------------------
+
+.. automodule:: loss_fn.distillation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+loss\_fn.segmentation module
+----------------------------
+
+.. automodule:: loss_fn.segmentation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: loss_fn
+   :members:
+   :undoc-members:
+   :show-inheritance:

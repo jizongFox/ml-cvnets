@@ -1,0 +1,21 @@
+cvnets.models package
+=====================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   cvnets.models.classification
+   cvnets.models.detection
+   cvnets.models.segmentation
+   cvnets.models.video_classification
+
+Module contents
+---------------
+
+.. automodule:: cvnets.models
+   :members:
+   :undoc-members:
+   :show-inheritance:

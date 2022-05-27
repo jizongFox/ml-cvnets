@@ -1,0 +1,21 @@
+data.collate\_fns package
+=========================
+
+Submodules
+----------
+
+data.collate\_fns.collate\_functions module
+-------------------------------------------
+
+.. automodule:: data.collate_fns.collate_functions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: data.collate_fns
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>optim package &mdash; CVNet: High Performance Library for Computer Vision  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> CVNet: High Performance Library for Computer Vision
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sample_recipes.html">Sample Recipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how_to.html">How To</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_samplers.html">Data Samplers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../en/general/README-model-zoo.html">Model Zoo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CVNet: High Performance Library for Computer Vision</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>optim package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/autogen/optim.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="optim-package">
+<h1>optim package<a class="headerlink" href="#optim-package" title="Permalink to this headline"></a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="optim.scheduler.html">optim.scheduler package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="optim.scheduler.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optim.scheduler.html#module-optim.scheduler.base_scheduler">optim.scheduler.base_scheduler module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optim.scheduler.html#module-optim.scheduler.cosine">optim.scheduler.cosine module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optim.scheduler.html#module-optim.scheduler.cyclic">optim.scheduler.cyclic module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optim.scheduler.html#module-optim.scheduler.fixed">optim.scheduler.fixed module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optim.scheduler.html#module-optim.scheduler.multi_step">optim.scheduler.multi_step module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optim.scheduler.html#module-optim.scheduler.polynomial">optim.scheduler.polynomial module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optim.scheduler.html#module-optim.scheduler">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="module-optim.adam">
+<span id="optim-adam-module"></span><h2>optim.adam module<a class="headerlink" href="#module-optim.adam" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="optim.adam.AdamOptimizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">optim.adam.</span></span><span class="sig-name descname"><span class="pre">AdamOptimizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/optim/adam.html#AdamOptimizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optim.adam.AdamOptimizer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#optim.base_optim.BaseOptim" title="optim.base_optim.BaseOptim"><code class="xref py py-class docutils literal notranslate"><span class="pre">optim.base_optim.BaseOptim</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.optim.adam.Adam</span></code></p>
+<p><a class="reference external" href="https://arxiv.org/abs/1412.6980">Adam</a> optimizer</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="optim.adam.AdamOptimizer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_params</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/optim/adam.html#AdamOptimizer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optim.adam.AdamOptimizer.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="optim.adam.AdamOptimizer.add_arguments">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">argparse.ArgumentParser</span></span></span><a class="reference internal" href="../_modules/optim/adam.html#AdamOptimizer.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optim.adam.AdamOptimizer.add_arguments" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-optim.adamw">
+<span id="optim-adamw-module"></span><h2>optim.adamw module<a class="headerlink" href="#module-optim.adamw" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="optim.adamw.AdamWOptimizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">optim.adamw.</span></span><span class="sig-name descname"><span class="pre">AdamWOptimizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/optim/adamw.html#AdamWOptimizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optim.adamw.AdamWOptimizer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#optim.base_optim.BaseOptim" title="optim.base_optim.BaseOptim"><code class="xref py py-class docutils literal notranslate"><span class="pre">optim.base_optim.BaseOptim</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.optim.adamw.AdamW</span></code></p>
+<p><a class="reference external" href="https://arxiv.org/abs/1711.05101">AdamW</a> optimizer</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="optim.adamw.AdamWOptimizer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_params</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/optim/adamw.html#AdamWOptimizer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optim.adamw.AdamWOptimizer.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="optim.adamw.AdamWOptimizer.add_arguments">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">argparse.ArgumentParser</span></span></span><a class="reference internal" href="../_modules/optim/adamw.html#AdamWOptimizer.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optim.adamw.AdamWOptimizer.add_arguments" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-optim.base_optim">
+<span id="optim-base-optim-module"></span><h2>optim.base_optim module<a class="headerlink" href="#module-optim.base_optim" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="optim.base_optim.BaseOptim">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">optim.base_optim.</span></span><span class="sig-name descname"><span class="pre">BaseOptim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/optim/base_optim.html#BaseOptim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optim.base_optim.BaseOptim" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for optimizer</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="optim.base_optim.BaseOptim.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/optim/base_optim.html#BaseOptim.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optim.base_optim.BaseOptim.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="optim.base_optim.BaseOptim.add_arguments">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">argparse.ArgumentParser</span></span></span><a class="reference internal" href="../_modules/optim/base_optim.html#BaseOptim.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optim.base_optim.BaseOptim.add_arguments" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-optim.sgd">
+<span id="optim-sgd-module"></span><h2>optim.sgd module<a class="headerlink" href="#module-optim.sgd" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="optim.sgd.SGDOptimizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">optim.sgd.</span></span><span class="sig-name descname"><span class="pre">SGDOptimizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/optim/sgd.html#SGDOptimizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optim.sgd.SGDOptimizer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#optim.base_optim.BaseOptim" title="optim.base_optim.BaseOptim"><code class="xref py py-class docutils literal notranslate"><span class="pre">optim.base_optim.BaseOptim</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.optim.sgd.SGD</span></code></p>
+<p><a class="reference external" href="http://www.cs.toronto.edu/%7Ehinton/absps/momentum.pdf">SGD</a> optimizer</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="optim.sgd.SGDOptimizer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_params</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/optim/sgd.html#SGDOptimizer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optim.sgd.SGDOptimizer.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="optim.sgd.SGDOptimizer.add_arguments">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">argparse.ArgumentParser</span></span></span><a class="reference internal" href="../_modules/optim/sgd.html#SGDOptimizer.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optim.sgd.SGDOptimizer.add_arguments" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-optim">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-optim" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="optim.register_optimizer">
+<span class="sig-prename descclassname"><span class="pre">optim.</span></span><span class="sig-name descname"><span class="pre">register_optimizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/optim.html#register_optimizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optim.register_optimizer" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="optim.build_optimizer">
+<span class="sig-prename descclassname"><span class="pre">optim.</span></span><span class="sig-name descname"><span class="pre">build_optimizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.nn.modules.module.Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opts</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#optim.base_optim.BaseOptim" title="optim.base_optim.BaseOptim"><span class="pre">optim.base_optim.BaseOptim</span></a></span></span><a class="reference internal" href="../_modules/optim.html#build_optimizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optim.build_optimizer" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="optim.general_optim_args">
+<span class="sig-prename descclassname"><span class="pre">optim.</span></span><span class="sig-name descname"><span class="pre">general_optim_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">argparse.ArgumentParser</span></span></span><a class="reference internal" href="../_modules/optim.html#general_optim_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optim.general_optim_args" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="optim.arguments_optimizer">
+<span class="sig-prename descclassname"><span class="pre">optim.</span></span><span class="sig-name descname"><span class="pre">arguments_optimizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">argparse.ArgumentParser</span></span></span><a class="reference internal" href="../_modules/optim.html#arguments_optimizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optim.arguments_optimizer" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (C) 2022 Apple Inc. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>data.video_reader.base_video_reader &mdash; CVNet: High Performance Library for Computer Vision  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> CVNet: High Performance Library for Computer Vision
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sample_recipes.html">Sample Recipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to.html">How To</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../data_samplers.html">Data Samplers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../en/general/README-model-zoo.html">Model Zoo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">CVNet: High Performance Library for Computer Vision</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../video_reader.html">data.video_reader</a> &raquo;</li>
+      <li>data.video_reader.base_video_reader</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for data.video_reader.base_video_reader</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># For licensing see accompanying LICENSE file.</span>
+<span class="c1"># Copyright (C) 2022 Apple Inc. All Rights Reserved.</span>
+<span class="c1">#</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">av</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">torchvision.transforms</span> <span class="kn">import</span> <span class="n">functional</span> <span class="k">as</span> <span class="n">F_vision</span>
+
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">..transforms</span> <span class="kn">import</span> <span class="n">image_pil</span> <span class="k">as</span> <span class="n">T</span>
+
+
+<div class="viewcode-block" id="PyAVBaseReader"><a class="viewcode-back" href="../../../autogen/data.video_reader.html#data.video_reader.base_video_reader.PyAVBaseReader">[docs]</a><span class="k">class</span> <span class="nc">PyAVBaseReader</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    PyAv video reader</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        opts: command line arguments</span>
+<span class="sd">        is_training (Optional[bool]): Training or validation mode. Default: `False`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PyAVBaseReader.__init__"><a class="viewcode-back" href="../../../autogen/data.video_reader.html#data.video_reader.base_video_reader.PyAVBaseReader.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">is_training</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fast_decoding</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;video_reader.fast_video_decoding&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_stack_format</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;video_reader.frame_stack_format&quot;</span><span class="p">,</span> <span class="s2">&quot;sequence_first&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stack_frame_dim</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_stack_format</span> <span class="o">==</span> <span class="s2">&quot;channel_first&quot;</span> <span class="k">else</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_transforms</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_frame_transform</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="n">opts</span><span class="p">)</span> <span class="k">if</span> <span class="n">is_training</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_erase_transform</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_random_erase_transform</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="n">opts</span><span class="p">)</span> <span class="k">if</span> <span class="n">is_training</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_transforms_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_transforms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frame_transforms_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">frame_transforms</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_erase_transform</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frame_transforms_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">random_erase_transform</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_frames_cache</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_frame_transform</span><span class="p">(</span><span class="n">opts</span><span class="p">):</span>
+        <span class="n">auto_augment</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;image_augmentation.auto_augment.enable&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">rand_augment</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;image_augmentation.rand_augment.enable&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">auto_augment</span> <span class="ow">and</span> <span class="n">rand_augment</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;AutoAugment and RandAugment are mutually exclusive. Use either of them, but not both&quot;</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">auto_augment</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">T</span><span class="o">.</span><span class="n">AutoAugment</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="n">opts</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">rand_augment</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">T</span><span class="o">.</span><span class="n">RandAugment</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="n">opts</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_random_erase_transform</span><span class="p">(</span><span class="n">opts</span><span class="p">):</span>
+        <span class="n">random_erase</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot; image_augmentation.random_erase.enable&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">random_erase</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">T</span><span class="o">.</span><span class="n">RandomErasing</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="n">opts</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">(</span><span class="se">\n\t</span><span class="s2">fast_decoding=</span><span class="si">{}</span><span class="se">\n\t</span><span class="s2">frame_stack_format=</span><span class="si">{}</span><span class="se">\n</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fast_decoding</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_stack_format</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="PyAVBaseReader.add_arguments"><a class="viewcode-back" href="../../../autogen/data.video_reader.html#data.video_reader.base_video_reader.PyAVBaseReader.add_arguments">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">parser</span></div>
+
+<div class="viewcode-block" id="PyAVBaseReader.check_video"><a class="viewcode-back" href="../../../autogen/data.video_reader.html#data.video_reader.base_video_reader.PyAVBaseReader.check_video">[docs]</a>    <span class="k">def</span> <span class="nf">check_video</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Adapted from basic demo: https://pyav.org/docs/stable/#basic-demo</span>
+            <span class="k">with</span> <span class="n">av</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">container</span><span class="p">:</span>
+                <span class="c1"># Decode the first video channel.</span>
+                <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">container</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">video</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+                    <span class="n">frame_idx</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">index</span>
+                    <span class="k">break</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="PyAVBaseReader.read_video"><a class="viewcode-back" href="../../../autogen/data.video_reader.html#data.video_reader.base_video_reader.PyAVBaseReader.read_video">[docs]</a>    <span class="k">def</span> <span class="nf">read_video</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="PyAVBaseReader.num_frames"><a class="viewcode-back" href="../../../autogen/data.video_reader.html#data.video_reader.base_video_reader.PyAVBaseReader.num_frames">[docs]</a>    <span class="k">def</span> <span class="nf">num_frames</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_frames_cache</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_frames_cache</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">total_frames</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">with</span> <span class="n">av</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">container</span><span class="p">:</span>
+                <span class="n">total_frames</span> <span class="o">=</span> <span class="n">container</span><span class="o">.</span><span class="n">streams</span><span class="o">.</span><span class="n">video</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">frames</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_frames_cache</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span> <span class="o">=</span> <span class="n">total_frames</span>
+            <span class="k">return</span> <span class="n">total_frames</span></div>
+
+<div class="viewcode-block" id="PyAVBaseReader.frame_to_tensor"><a class="viewcode-back" href="../../../autogen/data.video_reader.html#data.video_reader.base_video_reader.PyAVBaseReader.frame_to_tensor">[docs]</a>    <span class="k">def</span> <span class="nf">frame_to_tensor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+        <span class="n">frame_np</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">to_ndarray</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">&quot;rgb24&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_transforms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1">#</span>
+            <span class="n">frame_pil</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">fromarray</span><span class="p">(</span><span class="n">frame_np</span><span class="p">)</span>
+            <span class="n">frame_pil</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_transforms</span><span class="p">({</span><span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">frame_pil</span><span class="p">})[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span>
+            <span class="n">frame_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frame_pil</span><span class="p">)</span>
+
+        <span class="n">frame_np</span> <span class="o">=</span> <span class="n">frame_np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">frame_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">frame_np</span><span class="p">)</span>
+        <span class="c1"># [C, H, W]</span>
+        <span class="n">frame_torch</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">frame_np</span><span class="p">)</span>
+
+        <span class="c1"># normalize the frame between 0 and 1</span>
+        <span class="n">frame_torch</span> <span class="o">=</span> <span class="n">frame_torch</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="mf">255.0</span><span class="p">)</span>
+
+        <span class="c1"># apply random erase transform</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_erase_transform</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">frame_torch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_erase_transform</span><span class="p">({</span><span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">frame_torch</span><span class="p">})[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">frame_torch</span></div>
+
+<div class="viewcode-block" id="PyAVBaseReader.random_sampling"><a class="viewcode-back" href="../../../autogen/data.video_reader.html#data.video_reader.base_video_reader.PyAVBaseReader.random_sampling">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">random_sampling</span><span class="p">(</span>
+        <span class="n">desired_frames</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">total_frames</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_clips</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+        <span class="c1"># divide the video into K clips</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">interval</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">desired_frames</span> <span class="k">if</span> <span class="n">total_frames</span> <span class="o">&gt;=</span> <span class="n">desired_frames</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_clips</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">else</span> <span class="mi">1</span>
+            <span class="p">)</span>
+            <span class="c1"># The range of start Id is between [0, total_frames - n_desired_frames]</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">total_frames</span> <span class="o">-</span> <span class="n">desired_frames</span><span class="p">,</span> <span class="n">total_frames</span><span class="p">))</span>
+            <span class="n">start_ids</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">population</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">temp</span><span class="p">,</span> <span class="n">interval</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="n">n_clips</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="c1"># 30 frames and 120 frames in 1s and 4s videos @ 30 FPS, respectively</span>
+            <span class="c1"># The end_id is randomly selected between start_id + 30 and start_id + 120</span>
+            <span class="n">end_ids</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="nb">min</span><span class="p">(</span>
+                    <span class="nb">max</span><span class="p">(</span><span class="n">s_id</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">120</span><span class="p">),</span> <span class="n">s_id</span> <span class="o">+</span> <span class="n">desired_frames</span><span class="p">),</span>
+                    <span class="n">total_frames</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">s_id</span> <span class="ow">in</span> <span class="n">start_ids</span>
+            <span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="c1"># fall back to uniform</span>
+            <span class="n">video_clip_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
+                <span class="mi">0</span><span class="p">,</span> <span class="n">total_frames</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_clips</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+            <span class="n">start_ids</span> <span class="o">=</span> <span class="n">video_clip_ids</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">end_ids</span> <span class="o">=</span> <span class="n">video_clip_ids</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+        <span class="n">frame_ids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">start_idx</span><span class="p">,</span> <span class="n">end_idx</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">start_ids</span><span class="p">,</span> <span class="n">end_ids</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">clip_frame_ids</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                    <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+                        <span class="n">population</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">start_idx</span><span class="p">,</span> <span class="n">end_idx</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="n">desired_frames</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="c1"># sample with repetition</span>
+                <span class="n">clip_frame_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
+                    <span class="n">start</span><span class="o">=</span><span class="n">start_idx</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="n">end_idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="n">desired_frames</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">frame_ids</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">clip_frame_ids</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">frame_ids</span></div>
+
+<div class="viewcode-block" id="PyAVBaseReader.uniform_sampling"><a class="viewcode-back" href="../../../autogen/data.video_reader.html#data.video_reader.base_video_reader.PyAVBaseReader.uniform_sampling">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">uniform_sampling</span><span class="p">(</span>
+        <span class="n">desired_frames</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">total_frames</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_clips</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+        <span class="n">video_clip_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
+            <span class="mi">0</span><span class="p">,</span> <span class="n">total_frames</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_clips</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">start_ids</span> <span class="o">=</span> <span class="n">video_clip_ids</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">end_ids</span> <span class="o">=</span> <span class="n">video_clip_ids</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+        <span class="n">frame_ids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">start_idx</span><span class="p">,</span> <span class="n">end_idx</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">start_ids</span><span class="p">,</span> <span class="n">end_ids</span><span class="p">):</span>
+            <span class="n">clip_frame_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
+                <span class="n">start</span><span class="o">=</span><span class="n">start_idx</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="n">end_idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="n">desired_frames</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">frame_ids</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">clip_frame_ids</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">frame_ids</span></div>
+
+<div class="viewcode-block" id="PyAVBaseReader.convert_to_clips"><a class="viewcode-back" href="../../../autogen/data.video_reader.html#data.video_reader.base_video_reader.PyAVBaseReader.convert_to_clips">[docs]</a>    <span class="k">def</span> <span class="nf">convert_to_clips</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">video</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">n_clips</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="c1"># video is [N, C, H, W] or [C, N, H, W]</span>
+        <span class="n">video_clips</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">chunk</span><span class="p">(</span><span class="n">video</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="n">n_clips</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stack_frame_dim</span><span class="p">)</span>
+        <span class="n">video_clips</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">video_clips</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># video_clips is [T, n, C, H, W] or [T, C, n, H, W]</span>
+        <span class="k">return</span> <span class="n">video_clips</span></div>
+
+<div class="viewcode-block" id="PyAVBaseReader.process_video"><a class="viewcode-back" href="../../../autogen/data.video_reader.html#data.video_reader.base_video_reader.PyAVBaseReader.process_video">[docs]</a>    <span class="k">def</span> <span class="nf">process_video</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">vid_filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">n_frames_per_clip</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">clips_per_video</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">video_transform_fn</span><span class="p">:</span> <span class="n">Optional</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">is_training</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="PyAVBaseReader.dummy_video"><a class="viewcode-back" href="../../../autogen/data.video_reader.html#data.video_reader.base_video_reader.PyAVBaseReader.dummy_video">[docs]</a>    <span class="k">def</span> <span class="nf">dummy_video</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">clips_per_video</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_frames_to_sample</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">):</span>
+
+        <span class="c1"># [K, C, N, H, W] or # [K, N, C, H, W]</span>
+        <span class="c1"># K --&gt; number of clips, C --&gt; Image channels, N --&gt; Number of frames per clip, H --&gt; Height, W --&gt; Width</span>
+        <span class="n">tensor_size</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span><span class="n">clips_per_video</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">n_frames_to_sample</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_stack_format</span> <span class="o">==</span> <span class="s2">&quot;channel_first&quot;</span>
+            <span class="k">else</span> <span class="p">(</span><span class="n">clips_per_video</span><span class="p">,</span> <span class="n">n_frames_to_sample</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">input_video</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+            <span class="n">size</span><span class="o">=</span><span class="n">tensor_size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">input_video</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (C) 2022 Apple Inc. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

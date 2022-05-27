@@ -1,0 +1,23 @@
+cvnets package
+==============
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   cvnets.anchor_generator
+   cvnets.layers
+   cvnets.matcher_det
+   cvnets.misc
+   cvnets.models
+   cvnets.modules
+
+Module contents
+---------------
+
+.. automodule:: cvnets
+   :members:
+   :undoc-members:
+   :show-inheritance:

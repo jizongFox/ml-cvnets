@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>data.datasets.segmentation.pascal_voc &mdash; CVNet: High Performance Library for Computer Vision  documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> CVNet: High Performance Library for Computer Vision
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../sample_recipes.html">Sample Recipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how_to.html">How To</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../data_samplers.html">Data Samplers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../en/general/README-model-zoo.html">Model Zoo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">CVNet: High Performance Library for Computer Vision</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../../datasets.html">data.datasets</a> &raquo;</li>
+      <li>data.datasets.segmentation.pascal_voc</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for data.datasets.segmentation.pascal_voc</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># For licensing see accompanying LICENSE file.</span>
+<span class="c1"># Copyright (C) 2022 Apple Inc. All Rights Reserved.</span>
+<span class="c1">#</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">register_dataset</span>
+<span class="kn">from</span> <span class="nn">..dataset_base</span> <span class="kn">import</span> <span class="n">BaseImageDataset</span>
+<span class="kn">from</span> <span class="nn">...transforms</span> <span class="kn">import</span> <span class="n">image_pil</span> <span class="k">as</span> <span class="n">T</span>
+
+
+<div class="viewcode-block" id="PascalVOCDataset"><a class="viewcode-back" href="../../../../autogen/data.datasets.segmentation.html#data.datasets.segmentation.pascal_voc.PascalVOCDataset">[docs]</a><span class="nd">@register_dataset</span><span class="p">(</span><span class="s2">&quot;pascal&quot;</span><span class="p">,</span> <span class="s2">&quot;segmentation&quot;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">PascalVOCDataset</span><span class="p">(</span><span class="n">BaseImageDataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Dataset class for the PASCAL VOC 2012 dataset</span>
+
+<span class="sd">    The structure of PASCAL VOC dataset should be something like this: ::</span>
+
+<span class="sd">        pascal_voc/VOCdevkit/VOC2012/Annotations</span>
+<span class="sd">        pascal_voc/VOCdevkit/VOC2012/JPEGImages</span>
+<span class="sd">        pascal_voc/VOCdevkit/VOC2012/SegmentationClass</span>
+<span class="sd">        pascal_voc/VOCdevkit/VOC2012/SegmentationClassAug_Visualization</span>
+<span class="sd">        pascal_voc/VOCdevkit/VOC2012/ImageSets</span>
+<span class="sd">        pascal_voc/VOCdevkit/VOC2012/list</span>
+<span class="sd">        pascal_voc/VOCdevkit/VOC2012/SegmentationClassAug</span>
+<span class="sd">        pascal_voc/VOCdevkit/VOC2012/SegmentationObject</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        opts: command-line arguments</span>
+<span class="sd">        is_training (Optional[bool]): A flag used to indicate training or validation mode. Default: True</span>
+<span class="sd">        is_evaluation (Optional[bool]): A flag used to indicate evaluation (or inference) mode. Default: False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PascalVOCDataset.__init__"><a class="viewcode-back" href="../../../../autogen/data.datasets.segmentation.html#data.datasets.segmentation.pascal_voc.PascalVOCDataset.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">opts</span><span class="p">,</span>
+        <span class="n">is_training</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">is_evaluation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">opts</span><span class="o">=</span><span class="n">opts</span><span class="p">,</span> <span class="n">is_training</span><span class="o">=</span><span class="n">is_training</span><span class="p">,</span> <span class="n">is_evaluation</span><span class="o">=</span><span class="n">is_evaluation</span>
+        <span class="p">)</span>
+        <span class="n">use_coco_data</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;dataset.pascal.use_coco_data&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">coco_root_dir</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;dataset.pascal.coco_root_dir&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span>
+
+        <span class="n">voc_root_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s2">&quot;VOC2012&quot;</span><span class="p">)</span>
+        <span class="n">voc_list_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">voc_root_dir</span><span class="p">,</span> <span class="s2">&quot;list&quot;</span><span class="p">)</span>
+
+        <span class="n">coco_data_file</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_training</span><span class="p">:</span>
+            <span class="c1"># use the PASCAL VOC 2012 train data with augmented data</span>
+            <span class="n">data_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">voc_list_dir</span><span class="p">,</span> <span class="s2">&quot;train_aug.txt&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">use_coco_data</span> <span class="ow">and</span> <span class="n">coco_root_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">coco_data_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">coco_root_dir</span><span class="p">,</span> <span class="s2">&quot;train_2017.txt&quot;</span><span class="p">)</span>
+                <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span>
+                    <span class="n">coco_data_file</span>
+                <span class="p">),</span> <span class="s2">&quot;COCO data file does not exist at: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">coco_root_dir</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">voc_list_dir</span><span class="p">,</span> <span class="s2">&quot;val.txt&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">images</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">masks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                <span class="n">line_split</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+                <span class="n">rgb_img_loc</span> <span class="o">=</span> <span class="n">voc_root_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">line_split</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">mask_img_loc</span> <span class="o">=</span> <span class="n">voc_root_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">line_split</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span>
+                    <span class="n">rgb_img_loc</span>
+                <span class="p">),</span> <span class="s2">&quot;RGB file does not exist at: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rgb_img_loc</span><span class="p">)</span>
+                <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span>
+                    <span class="n">mask_img_loc</span>
+                <span class="p">),</span> <span class="s2">&quot;Mask image does not exist at: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rgb_img_loc</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rgb_img_loc</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">masks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mask_img_loc</span><span class="p">)</span>
+
+        <span class="c1"># if you want to use Coarse data for training</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_training</span> <span class="ow">and</span> <span class="n">coco_data_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">coco_data_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">lines</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                    <span class="n">line_split</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+                    <span class="n">rgb_img_loc</span> <span class="o">=</span> <span class="n">coco_root_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">line_split</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+                    <span class="n">mask_img_loc</span> <span class="o">=</span> <span class="n">coco_root_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">line_split</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+                    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">rgb_img_loc</span><span class="p">)</span>
+                    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">mask_img_loc</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rgb_img_loc</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">masks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mask_img_loc</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_coco_data</span> <span class="o">=</span> <span class="n">use_coco_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ignore_label</span> <span class="o">=</span> <span class="mi">255</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bgrnd_idx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;model.segmentation.n_classes&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">class_names</span><span class="p">()))</span></div>
+
+<div class="viewcode-block" id="PascalVOCDataset.add_arguments"><a class="viewcode-back" href="../../../../autogen/data.datasets.segmentation.html#data.datasets.segmentation.pascal_voc.PascalVOCDataset.add_arguments">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">):</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--dataset.pascal.use-coco-data&quot;</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use MS-COCO data for training&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--dataset.pascal.coco-root-dir&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Location of MS-COCO data&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">parser</span></div>
+
+<div class="viewcode-block" id="PascalVOCDataset.color_palette"><a class="viewcode-back" href="../../../../autogen/data.datasets.segmentation.html#data.datasets.segmentation.pascal_voc.PascalVOCDataset.color_palette">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">color_palette</span><span class="p">():</span>
+        <span class="n">color_codes</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">64</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">192</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">192</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">64</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">192</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">192</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">192</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">192</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span>
+        <span class="p">]</span>
+
+        <span class="n">color_codes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">color_codes</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">color_codes</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PascalVOCDataset.class_names"><a class="viewcode-back" href="../../../../autogen/data.datasets.segmentation.html#data.datasets.segmentation.pascal_voc.PascalVOCDataset.class_names">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">class_names</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="s2">&quot;background&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;aeroplane&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bicycle&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bird&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;boat&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bottle&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bus&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;car&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;cat&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;chair&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;cow&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;diningtable&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;dog&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;horse&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;motorbike&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;person&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;potted_plant&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sheep&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sofa&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;train&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;tv_monitor&quot;</span><span class="p">,</span>
+        <span class="p">]</span></div>
+
+    <span class="k">def</span> <span class="nf">_training_transforms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="n">first_aug</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">RandomShortSizeResize</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">)</span>
+        <span class="n">aug_list</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">T</span><span class="o">.</span><span class="n">RandomHorizontalFlip</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">),</span>
+            <span class="n">T</span><span class="o">.</span><span class="n">RandomCrop</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">ignore_idx</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ignore_label</span><span class="p">),</span>
+        <span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;image_augmentation.random_gaussian_noise.enable&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="n">aug_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">RandomGaussianBlur</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;image_augmentation.photo_metric_distort.enable&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="n">aug_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">PhotometricDistort</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;image_augmentation.random_rotate.enable&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="n">aug_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">RandomRotate</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;image_augmentation.random_order.enable&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="n">new_aug_list</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">first_aug</span><span class="p">,</span>
+                <span class="n">T</span><span class="o">.</span><span class="n">RandomOrder</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">,</span> <span class="n">img_transforms</span><span class="o">=</span><span class="n">aug_list</span><span class="p">),</span>
+                <span class="n">T</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">),</span>
+            <span class="p">]</span>
+            <span class="k">return</span> <span class="n">T</span><span class="o">.</span><span class="n">Compose</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">,</span> <span class="n">img_transforms</span><span class="o">=</span><span class="n">new_aug_list</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">aug_list</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">first_aug</span><span class="p">)</span>
+            <span class="n">aug_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">T</span><span class="o">.</span><span class="n">Compose</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">,</span> <span class="n">img_transforms</span><span class="o">=</span><span class="n">aug_list</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_validation_transforms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">aug_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">T</span><span class="o">.</span><span class="n">Resize</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">),</span> <span class="n">T</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">T</span><span class="o">.</span><span class="n">Compose</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">,</span> <span class="n">img_transforms</span><span class="o">=</span><span class="n">aug_list</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_evaluation_transforms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">aug_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;evaluation.segmentation.resize_input_images&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="c1"># we want to resize while maintaining aspect ratio. So, we pass img_size argument to resize function</span>
+            <span class="n">aug_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">Resize</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">,</span> <span class="n">img_size</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">size</span><span class="p">)))</span>
+
+        <span class="n">aug_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">T</span><span class="o">.</span><span class="n">Compose</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">,</span> <span class="n">img_transforms</span><span class="o">=</span><span class="n">aug_list</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_indexes_tup</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="n">crop_size_h</span><span class="p">,</span> <span class="n">crop_size_w</span><span class="p">,</span> <span class="n">img_index</span> <span class="o">=</span> <span class="n">batch_indexes_tup</span>
+        <span class="n">crop_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">crop_size_h</span><span class="p">,</span> <span class="n">crop_size_w</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_training</span><span class="p">:</span>
+            <span class="n">_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_training_transforms</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">crop_size</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_evaluation</span><span class="p">:</span>
+            <span class="n">_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluation_transforms</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">crop_size</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validation_transforms</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">crop_size</span><span class="p">)</span>
+
+        <span class="n">img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_image_pil</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">img_index</span><span class="p">])</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_mask_pil</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">masks</span><span class="p">[</span><span class="n">img_index</span><span class="p">])</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">img</span><span class="p">}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_evaluation</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;mask&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mask</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">_transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_evaluation</span><span class="p">:</span>
+            <span class="c1"># for evaluation purposes, resize only the input and not mask</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;mask&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_mask_to_tensor</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;mask&quot;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;mask&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_evaluation</span><span class="p">:</span>
+            <span class="n">im_width</span><span class="p">,</span> <span class="n">im_height</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span>
+            <span class="n">img_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">img_index</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;png&quot;</span><span class="p">)</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;file_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">img_name</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;im_width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">im_width</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;im_height&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">im_height</span>
+
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">utils.tensor_utils</span> <span class="kn">import</span> <span class="n">image_size_from_opts</span>
+
+        <span class="n">im_h</span><span class="p">,</span> <span class="n">im_w</span> <span class="o">=</span> <span class="n">image_size_from_opts</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_training</span><span class="p">:</span>
+            <span class="n">transforms_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_training_transforms</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">im_h</span><span class="p">,</span> <span class="n">im_w</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_evaluation</span><span class="p">:</span>
+            <span class="n">transforms_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluation_transforms</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">im_h</span><span class="p">,</span> <span class="n">im_w</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">transforms_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validation_transforms</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">im_h</span><span class="p">,</span> <span class="n">im_w</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">(</span><span class="se">\n\t</span><span class="s2">root=</span><span class="si">{}</span><span class="se">\n\t</span><span class="s2">is_training=</span><span class="si">{}</span><span class="se">\n\t</span><span class="s2">samples=</span><span class="si">{}</span><span class="se">\n\t</span><span class="s2">use_coco=</span><span class="si">{}</span><span class="se">\n\t</span><span class="s2">transforms=</span><span class="si">{}</span><span class="se">\n</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_training</span><span class="p">,</span>
+            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">use_coco_data</span><span class="p">,</span>
+            <span class="n">transforms_str</span><span class="p">,</span>
+        <span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (C) 2022 Apple Inc. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

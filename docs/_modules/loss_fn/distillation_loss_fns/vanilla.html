@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>loss_fn.distillation_loss_fns.vanilla &mdash; CVNet: High Performance Library for Computer Vision  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> CVNet: High Performance Library for Computer Vision
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sample_recipes.html">Sample Recipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to.html">How To</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../data_samplers.html">Data Samplers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../en/general/README-model-zoo.html">Model Zoo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">CVNet: High Performance Library for Computer Vision</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../../loss_fn.html">loss_fn</a> &raquo;</li>
+          <li><a href="../distillation_loss_fns.html">loss_fn.distillation_loss_fns</a> &raquo;</li>
+      <li>loss_fn.distillation_loss_fns.vanilla</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for loss_fn.distillation_loss_fns.vanilla</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># For licensing see accompanying LICENSE file.</span>
+<span class="c1"># Copyright (C) 2022 Apple Inc. All Rights Reserved.</span>
+<span class="c1">#</span>
+
+<span class="kn">import</span> <span class="nn">os.path</span>
+<span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">functional</span> <span class="k">as</span> <span class="n">F</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span><span class="p">,</span> <span class="n">Tensor</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">utils.tensor_utils</span> <span class="kn">import</span> <span class="n">tensor_to_python_float</span>
+<span class="kn">from</span> <span class="nn">utils.ddp_utils</span> <span class="kn">import</span> <span class="n">is_master</span>
+<span class="kn">from</span> <span class="nn">utils.checkpoint_utils</span> <span class="kn">import</span> <span class="n">load_state_dict</span>
+<span class="kn">from</span> <span class="nn">cvnets.models.classification</span> <span class="kn">import</span> <span class="n">build_classification_model</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">register_distillation_loss_fn</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">BaseCriteria</span>
+
+
+<div class="viewcode-block" id="VanillaDistillationLoss"><a class="viewcode-back" href="../../../autogen/loss_fn.distillation_loss_fns.html#loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss">[docs]</a><span class="nd">@register_distillation_loss_fn</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;vanilla&quot;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">VanillaDistillationLoss</span><span class="p">(</span><span class="n">BaseCriteria</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Basic Distillation loss</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="VanillaDistillationLoss.__init__"><a class="viewcode-back" href="../../../autogen/loss_fn.distillation_loss_fns.html#loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">):</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;loss.distillation.vanilla_alpha&quot;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">steps</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;loss.distillation.vanilla_accum_iterations&quot;</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
+        <span class="n">adaptive_wt_balance</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;loss.distillation.vanilla_adaptive_weight_balance&quot;</span><span class="p">,</span> <span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="n">tau</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;loss.distillation.vanilla_tau&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">is_distributed</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;ddp.use_distributed&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">n_gpus</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;dev.num_gpus&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">update_freq</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;loss.distillation.vanilla_weight_update_freq&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">distill_type</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;loss.distillation.vanilla_distillation_type&quot;</span><span class="p">,</span> <span class="s2">&quot;soft&quot;</span>
+        <span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">teacher_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_teacher_model</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="n">opts</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_distributed</span> <span class="ow">and</span> <span class="n">n_gpus</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">teacher_model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">DataParallel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">teacher_model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">teacher_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_label_loss_fn</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="n">opts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tau</span> <span class="o">=</span> <span class="n">tau</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight_label</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="k">if</span> <span class="n">adaptive_wt_balance</span> <span class="k">else</span> <span class="n">alpha</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight_dist</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="k">if</span> <span class="n">adaptive_wt_balance</span> <span class="k">else</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">alpha</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">adaptive</span> <span class="o">=</span> <span class="n">adaptive_wt_balance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_acc_label</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_acc_dist</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="o">=</span> <span class="n">steps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step_counter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_distributed</span> <span class="o">=</span> <span class="n">is_distributed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_freq</span> <span class="o">=</span> <span class="n">update_freq</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_master_node</span> <span class="o">=</span> <span class="n">is_master</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">distillation_loss_fn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_soft_distillation_loss</span>
+        <span class="k">if</span> <span class="n">distill_type</span> <span class="o">==</span> <span class="s2">&quot;hard&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distillation_loss_fn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_hard_distillation_loss</span></div>
+
+<div class="viewcode-block" id="VanillaDistillationLoss.build_teacher_model"><a class="viewcode-back" href="../../../autogen/loss_fn.distillation_loss_fns.html#loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.build_teacher_model">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">build_teacher_model</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
+        <span class="n">teacher_model_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;loss.distillation.vanilla_teacher_model&quot;</span><span class="p">,</span> <span class="s2">&quot;resnet_50&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">def_model_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;model.classification.name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;model.classification.name&quot;</span><span class="p">,</span> <span class="n">teacher_model_name</span><span class="p">)</span>
+        <span class="n">teacher_model</span> <span class="o">=</span> <span class="n">build_classification_model</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="n">opts</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;model.classification.name&quot;</span><span class="p">,</span> <span class="n">def_model_name</span><span class="p">)</span>
+
+        <span class="n">pretrained_wts_path</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;loss.distillation.vanilla_teacher_model_weights&quot;</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">pretrained_wts_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">pretrained_wts_path</span><span class="p">):</span>
+            <span class="n">pretrained_wts_dict</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">pretrained_wts_path</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+            <span class="n">load_state_dict</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">teacher_model</span><span class="p">,</span> <span class="n">state_dict</span><span class="o">=</span><span class="n">pretrained_wts_dict</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s2">&quot;Pretrained weights are required for teacher model (</span><span class="si">{}</span><span class="s2">) in the distillation loss&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">teacher_model_name</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">teacher_model</span></div>
+
+<div class="viewcode-block" id="VanillaDistillationLoss.build_label_loss_fn"><a class="viewcode-back" href="../../../autogen/loss_fn.distillation_loss_fns.html#loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.build_label_loss_fn">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">build_label_loss_fn</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseCriteria</span><span class="p">:</span>
+        <span class="n">label_loss_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;loss.distillation.vanilla_label_loss&quot;</span><span class="p">,</span> <span class="s2">&quot;cross_entropy&quot;</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">label_loss_name</span> <span class="o">==</span> <span class="s2">&quot;cross_entropy&quot;</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">loss_fn.classification</span> <span class="kn">import</span> <span class="n">ClassificationLoss</span>
+
+            <span class="n">loss_fn_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;loss.classification.name&quot;</span><span class="p">,</span> <span class="s2">&quot;cross_entropy&quot;</span><span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;loss.classification.name&quot;</span><span class="p">,</span> <span class="n">label_loss_name</span><span class="p">)</span>
+            <span class="n">label_loss</span> <span class="o">=</span> <span class="n">ClassificationLoss</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;loss.classification.name&quot;</span><span class="p">,</span> <span class="n">loss_fn_name</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">label_loss</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="VanillaDistillationLoss.compute_soft_distillation_loss"><a class="viewcode-back" href="../../../autogen/loss_fn.distillation_loss_fns.html#loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.compute_soft_distillation_loss">[docs]</a>    <span class="k">def</span> <span class="nf">compute_soft_distillation_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_sample</span><span class="p">,</span> <span class="n">prediction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Details about soft-distillation here: https://arxiv.org/abs/2012.12877</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="n">teacher_outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">teacher_model</span><span class="p">(</span><span class="n">input_sample</span><span class="p">)</span>
+
+        <span class="n">multiplier</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tau</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau</span> <span class="o">*</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">prediction</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span>
+        <span class="n">pred_dist</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">prediction</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">teach_dist</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">teacher_outputs</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">distillation_loss</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">F</span><span class="o">.</span><span class="n">kl_div</span><span class="p">(</span><span class="n">pred_dist</span><span class="p">,</span> <span class="n">teach_dist</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="n">log_target</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="o">*</span> <span class="n">multiplier</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">distillation_loss</span></div>
+
+<div class="viewcode-block" id="VanillaDistillationLoss.compute_hard_distillation_loss"><a class="viewcode-back" href="../../../autogen/loss_fn.distillation_loss_fns.html#loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.compute_hard_distillation_loss">[docs]</a>    <span class="k">def</span> <span class="nf">compute_hard_distillation_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_sample</span><span class="p">,</span> <span class="n">prediction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Details about Distillation here: https://arxiv.org/abs/1503.02531</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="n">teacher_logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">teacher_model</span><span class="p">(</span><span class="n">input_sample</span><span class="p">)</span>
+            <span class="n">teacher_labels</span> <span class="o">=</span> <span class="n">teacher_logits</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">distillation_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_loss</span><span class="p">(</span>
+            <span class="n">input_sample</span><span class="o">=</span><span class="n">input_sample</span><span class="p">,</span> <span class="n">prediction</span><span class="o">=</span><span class="n">prediction</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">teacher_labels</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">distillation_loss</span></div>
+
+<div class="viewcode-block" id="VanillaDistillationLoss.compute_weights"><a class="viewcode-back" href="../../../autogen/loss_fn.distillation_loss_fns.html#loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.compute_weights">[docs]</a>    <span class="k">def</span> <span class="nf">compute_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">prev_wt_dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_dist</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight_dist</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loss_acc_label</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loss_acc_dist</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps</span><span class="p">),</span> <span class="mi">3</span>
+        <span class="p">)</span>
+        <span class="c1"># self.loss_acc_label = 0.0</span>
+        <span class="c1"># self.loss_acc_dist = 0.0</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_master_node</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> Contribution of distillation loss w.r.t label loss is updated&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2"> Dist. loss contribution: </span><span class="si">{}</span><span class="s2"> -&gt; </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">prev_wt_dist</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_dist</span>
+                <span class="p">)</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="VanillaDistillationLoss.forward"><a class="viewcode-back" href="../../../autogen/loss_fn.distillation_loss_fns.html#loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">input_sample</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">prediction</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Tensor</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="n">distillation_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distillation_loss_fn</span><span class="p">(</span>
+            <span class="n">input_sample</span><span class="o">=</span><span class="n">input_sample</span><span class="p">,</span> <span class="n">prediction</span><span class="o">=</span><span class="n">prediction</span>
+        <span class="p">)</span>
+        <span class="n">label_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_loss</span><span class="p">(</span>
+            <span class="n">input_sample</span><span class="o">=</span><span class="n">input_sample</span><span class="p">,</span> <span class="n">prediction</span><span class="o">=</span><span class="n">prediction</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">adaptive</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_counter</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loss_acc_dist</span> <span class="o">+=</span> <span class="n">tensor_to_python_float</span><span class="p">(</span>
+                <span class="n">distillation_loss</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">is_distributed</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loss_acc_label</span> <span class="o">+=</span> <span class="n">tensor_to_python_float</span><span class="p">(</span>
+                <span class="n">label_loss</span><span class="p">,</span> <span class="n">is_distributed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">is_distributed</span>
+            <span class="p">)</span>
+
+            <span class="c1"># update the weights</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">step_counter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_freq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">compute_weights</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">step_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">adaptive</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_counter</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compute_weights</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">step_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">total_loss</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_label</span> <span class="o">*</span> <span class="n">label_loss</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weight_dist</span> <span class="o">*</span> <span class="n">distillation_loss</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">total_loss</span></div>
+
+<div class="viewcode-block" id="VanillaDistillationLoss.add_arguments"><a class="viewcode-back" href="../../../autogen/loss_fn.distillation_loss_fns.html#loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.add_arguments">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">):</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--loss.distillation.vanilla-teacher-model&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="s2">&quot;resnet_50&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Teacher model for distillation&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--loss.distillation.vanilla-label-loss&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="s2">&quot;cross_entropy&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Label loss&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--loss.distillation.vanilla-alpha&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Contribution of label loss&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--loss.distillation.vanilla-tau&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Tau value&quot;</span>
+        <span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--loss.distillation.vanilla-adaptive-weight-balance&quot;</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Adaptively balance the contribution of label and distribution loss&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--loss.distillation.vanilla-accum-iterations&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Number of iterations for accumulating loss&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--loss.distillation.vanilla-weight-update-freq&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Update freq for updating the weights for label and distribution loss&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--loss.distillation.vanilla-teacher-model-weights&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Teacher model path&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--loss.distillation.vanilla-distillation-type&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="s2">&quot;soft&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use hard or soft labels from teacher&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">parser</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">label_loss_str</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label_loss</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">())</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">(</span><span class="se">\n\t</span><span class="s2"> label_loss_fn=</span><span class="si">{}</span><span class="s2"> </span><span class="se">\n\t</span><span class="s2"> teacher_model=</span><span class="si">{}</span><span class="s2"> </span><span class="se">\n\t</span><span class="s2"> alpha=</span><span class="si">{}</span><span class="s2"> </span><span class="se">\n\t</span><span class="s2"> tau=</span><span class="si">{}</span><span class="s2"> </span><span class="se">\n\t</span><span class="s2"> adaptive=</span><span class="si">{}</span><span class="s2"> </span><span class="se">\n\t</span><span class="s2"> accum_iter=</span><span class="si">{}</span><span class="s2"> </span><span class="se">\n\t</span><span class="s2"> update_freq=</span><span class="si">{}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="n">label_loss_str</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">teacher_model</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weight_label</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">adaptive</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_freq</span><span class="p">,</span>
+        <span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (C) 2022 Apple Inc. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

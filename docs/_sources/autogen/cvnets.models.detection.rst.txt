@@ -1,0 +1,29 @@
+cvnets.models.detection package
+===============================
+
+Submodules
+----------
+
+cvnets.models.detection.base\_detection module
+----------------------------------------------
+
+.. automodule:: cvnets.models.detection.base_detection
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cvnets.models.detection.ssd module
+----------------------------------
+
+.. automodule:: cvnets.models.detection.ssd
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: cvnets.models.detection
+   :members:
+   :undoc-members:
+   :show-inheritance:

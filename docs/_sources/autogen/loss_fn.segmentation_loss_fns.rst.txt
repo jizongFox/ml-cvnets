@@ -1,0 +1,21 @@
+loss\_fn.segmentation\_loss\_fns package
+========================================
+
+Submodules
+----------
+
+loss\_fn.segmentation\_loss\_fns.cross\_entropy module
+------------------------------------------------------
+
+.. automodule:: loss_fn.segmentation_loss_fns.cross_entropy
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: loss_fn.segmentation_loss_fns
+   :members:
+   :undoc-members:
+   :show-inheritance:

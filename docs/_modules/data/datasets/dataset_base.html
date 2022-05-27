@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>data.datasets.dataset_base &mdash; CVNet: High Performance Library for Computer Vision  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> CVNet: High Performance Library for Computer Vision
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sample_recipes.html">Sample Recipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to.html">How To</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../data_samplers.html">Data Samplers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../en/general/README-model-zoo.html">Model Zoo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">CVNet: High Performance Library for Computer Vision</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../datasets.html">data.datasets</a> &raquo;</li>
+      <li>data.datasets.dataset_base</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for data.datasets.dataset_base</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># For licensing see accompanying LICENSE file.</span>
+<span class="c1"># Copyright (C) 2022 Apple Inc. All Rights Reserved.</span>
+<span class="c1">#</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span> <span class="nn">torch.utils</span> <span class="kn">import</span> <span class="n">data</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">psutil</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">torchvision.io</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">read_image</span><span class="p">,</span>
+    <span class="n">read_file</span><span class="p">,</span>
+    <span class="n">decode_jpeg</span><span class="p">,</span>
+    <span class="n">ImageReadMode</span><span class="p">,</span>
+    <span class="n">decode_image</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">import</span> <span class="nn">io</span>
+
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">utils.ddp_utils</span> <span class="kn">import</span> <span class="n">is_start_rank_node</span><span class="p">,</span> <span class="n">is_master</span>
+
+
+<div class="viewcode-block" id="BaseImageDataset"><a class="viewcode-back" href="../../../autogen/data.datasets.html#data.datasets.dataset_base.BaseImageDataset">[docs]</a><span class="k">class</span> <span class="nc">BaseImageDataset</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base Dataset class for Image datasets</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="BaseImageDataset.__init__"><a class="viewcode-back" href="../../../autogen/data.datasets.html#data.datasets.dataset_base.BaseImageDataset.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">opts</span><span class="p">,</span>
+        <span class="n">is_training</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">is_evaluation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;dataset.trove.enable&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="n">opts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_from_server</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="n">opts</span><span class="p">,</span> <span class="n">is_training</span><span class="o">=</span><span class="n">is_training</span><span class="p">)</span>
+
+        <span class="n">root</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;dataset.root_train&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">is_training</span>
+            <span class="k">else</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;dataset.root_val&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_training</span> <span class="o">=</span> <span class="n">is_training</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_evaluation</span> <span class="o">=</span> <span class="n">is_evaluation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sampler_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;sampler.name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opts</span> <span class="o">=</span> <span class="n">opts</span>
+
+        <span class="n">image_device_cuda</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;dataset.decode_data_on_gpu&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;dev.device&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">))</span>
+        <span class="n">use_cuda</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">image_device_cuda</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">device</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="ow">and</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">):</span>  <span class="c1"># cuda could be cuda:0</span>
+            <span class="n">use_cuda</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">use_cuda</span> <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;dataset.pin_memory&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">is_master</span><span class="p">(</span><span class="n">opts</span><span class="p">):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="s2">&quot;For loading images on GPU, --dataset.pin-memory should be disabled.&quot;</span>
+                <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span> <span class="k">if</span> <span class="n">use_cuda</span> <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cached_data</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">dict</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;dataset.cache_images_on_ram&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">and</span> <span class="n">is_training</span>
+            <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;dataset.persistent_workers&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">is_master</span><span class="p">(</span><span class="n">opts</span><span class="p">):</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                        <span class="s2">&quot;For caching, --dataset.persistent-workers should be enabled.&quot;</span>
+                    <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache_limit</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;dataset.cache_limit&quot;</span><span class="p">,</span> <span class="mf">80.0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseImageDataset.add_arguments"><a class="viewcode-back" href="../../../autogen/data.datasets.html#data.datasets.dataset_base.BaseImageDataset.add_arguments">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">parser</span></div>
+
+<div class="viewcode-block" id="BaseImageDataset.load_from_server"><a class="viewcode-back" href="../../../autogen/data.datasets.html#data.datasets.dataset_base.BaseImageDataset.load_from_server">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">load_from_server</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="n">is_training</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">turitrove</span> <span class="k">as</span> <span class="nn">trove</span>
+        <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;Trove is required for server side data loading. Please  install it.&quot;</span>
+            <span class="p">)</span>
+        <span class="n">mount_path</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;dataset.trove.mount_path&quot;</span><span class="p">,</span> <span class="s2">&quot;/mnt/vision_datasets&quot;</span><span class="p">)</span>
+        <span class="n">disk_cache_max_size_gb</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;dataset.trove.disk_cache_max_size_gb&quot;</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="n">disk_cache_mount_size_gb</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;dataset.trove.disk_cache_mount_size_gb&quot;</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="n">disk_cache_dir</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;dataset.trove.disk_cache_dir&quot;</span><span class="p">,</span> <span class="s2">&quot;/mnt/trove_cache/&quot;</span>
+        <span class="p">)</span>
+        <span class="n">trove_uri</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;dataset.trove.uri&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">trove_uri</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;URI cannot be None for trove. Please specify using --dataset.trove.uri&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">disable_printing</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">is_start_rank_node</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">trove</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">mc</span> <span class="o">=</span> <span class="n">trove</span><span class="o">.</span><span class="n">MountConfiguration</span><span class="p">()</span>
+            <span class="n">mc</span><span class="o">.</span><span class="n">prefetch_strategy</span> <span class="o">=</span> <span class="n">trove</span><span class="o">.</span><span class="n">PrefetchStrategy</span><span class="o">.</span><span class="n">ALL</span>
+            <span class="n">mc</span><span class="o">.</span><span class="n">disk_cache_max_size_gb</span> <span class="o">=</span> <span class="n">disk_cache_max_size_gb</span>
+            <span class="n">mc</span><span class="o">.</span><span class="n">disk_cache_mount_size_gb</span> <span class="o">=</span> <span class="n">disk_cache_mount_size_gb</span>
+            <span class="n">mc</span><span class="o">.</span><span class="n">disk_cache_dir</span> <span class="o">=</span> <span class="n">disk_cache_dir</span>
+            <span class="n">mc</span><span class="o">.</span><span class="n">prevent_cacheless_mounts</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="n">d</span> <span class="o">=</span> <span class="n">trove</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="n">trove_uri</span><span class="o">=</span><span class="n">trove_uri</span><span class="p">,</span> <span class="n">local_dir</span><span class="o">=</span><span class="n">mount_path</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">mc</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">trove</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">continue</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">enable_printing</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">is_training</span><span class="p">:</span>
+            <span class="n">path_prefix</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;dataset.trove.dir_train&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">path_prefix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="s2">&quot;Path prefix cannot be None. Please specify using --dataset.trove.train-path-prefix&quot;</span>
+                <span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;dataset.root_train&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mount_path</span><span class="p">,</span> <span class="n">path_prefix</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">path_prefix</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;dataset.trove.dir_val&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">path_prefix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span>
+                    <span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;dataset.root_val&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mount_path</span><span class="p">,</span> <span class="n">path_prefix</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;dataset.root_val&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">opts</span></div>
+
+    <span class="k">def</span> <span class="nf">_training_transforms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">_validation_transforms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">_evaluation_transforms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+<div class="viewcode-block" id="BaseImageDataset.read_image_pil"><a class="viewcode-back" href="../../../autogen/data.datasets.html#data.datasets.dataset_base.BaseImageDataset.read_image_pil">[docs]</a>    <span class="k">def</span> <span class="nf">read_image_pil</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">convert_to_rgb</span><span class="p">(</span><span class="n">inp_data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">]):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">rgb_img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">inp_data</span><span class="p">)</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s2">&quot;RGB&quot;</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">rgb_img</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="n">rgb_img</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># code for caching data on RAM</span>
+            <span class="n">used_memory</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">psutil</span><span class="o">.</span><span class="n">virtual_memory</span><span class="p">()</span><span class="o">.</span><span class="n">percent</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached_data</span><span class="p">:</span>
+                <span class="n">img_byte</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached_data</span><span class="p">[</span><span class="n">path</span><span class="p">]</span>
+
+            <span class="k">elif</span> <span class="p">(</span><span class="n">path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached_data</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">used_memory</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_limit</span><span class="p">):</span>
+                <span class="c1"># image is not present in cache and RAM usage is less than the threshold, add to cache</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">bin_file</span><span class="p">:</span>
+                    <span class="n">bin_file_data</span> <span class="o">=</span> <span class="n">bin_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                    <span class="n">img_byte</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">bin_file_data</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">cached_data</span><span class="p">[</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="n">img_byte</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">bin_file</span><span class="p">:</span>
+                    <span class="n">bin_file_data</span> <span class="o">=</span> <span class="n">bin_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                    <span class="n">img_byte</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">bin_file_data</span><span class="p">)</span>  <span class="c1"># in-memory data</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">convert_to_rgb</span><span class="p">(</span><span class="n">img_byte</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">convert_to_rgb</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">img</span></div>
+
+<div class="viewcode-block" id="BaseImageDataset.read_pil_image_torchvision"><a class="viewcode-back" href="../../../autogen/data.datasets.html#data.datasets.dataset_base.BaseImageDataset.read_pil_image_torchvision">[docs]</a>    <span class="k">def</span> <span class="nf">read_pil_image_torchvision</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># code for caching data on RAM</span>
+            <span class="n">used_memory</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">psutil</span><span class="o">.</span><span class="n">virtual_memory</span><span class="p">()</span><span class="o">.</span><span class="n">percent</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached_data</span><span class="p">:</span>
+                <span class="n">byte_img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached_data</span><span class="p">[</span><span class="n">path</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached_data</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">used_memory</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_limit</span><span class="p">):</span>
+                <span class="c1"># image is not present in cache and RAM usage is less than the threshold, add to cache</span>
+                <span class="n">byte_img</span> <span class="o">=</span> <span class="n">read_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cached_data</span><span class="p">[</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="n">byte_img</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">byte_img</span> <span class="o">=</span> <span class="n">read_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">byte_img</span> <span class="o">=</span> <span class="n">read_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">decode_image</span><span class="p">(</span><span class="n">byte_img</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">ImageReadMode</span><span class="o">.</span><span class="n">RGB</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">img</span></div>
+
+<div class="viewcode-block" id="BaseImageDataset.read_image_tensor"><a class="viewcode-back" href="../../../autogen/data.datasets.html#data.datasets.dataset_base.BaseImageDataset.read_image_tensor">[docs]</a>    <span class="k">def</span> <span class="nf">read_image_tensor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># code for caching data on RAM</span>
+            <span class="n">used_memory</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">psutil</span><span class="o">.</span><span class="n">virtual_memory</span><span class="p">()</span><span class="o">.</span><span class="n">percent</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached_data</span><span class="p">:</span>
+                <span class="n">byte_img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached_data</span><span class="p">[</span><span class="n">path</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached_data</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">used_memory</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_limit</span><span class="p">):</span>
+                <span class="c1"># image is not present in cache and RAM usage is less than the threshold, add to cache</span>
+                <span class="n">byte_img</span> <span class="o">=</span> <span class="n">read_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cached_data</span><span class="p">[</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="n">byte_img</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">byte_img</span> <span class="o">=</span> <span class="n">read_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">byte_img</span> <span class="o">=</span> <span class="n">read_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">decode_jpeg</span><span class="p">(</span><span class="n">byte_img</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">ImageReadMode</span><span class="o">.</span><span class="n">RGB</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">img</span></div>
+
+<div class="viewcode-block" id="BaseImageDataset.read_mask_pil"><a class="viewcode-back" href="../../../autogen/data.datasets.html#data.datasets.dataset_base.BaseImageDataset.read_mask_pil">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_mask_pil</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">mask</span><span class="o">.</span><span class="n">mode</span> <span class="o">!=</span> <span class="s2">&quot;L&quot;</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Mask mode should be L. Got: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mask</span><span class="o">.</span><span class="n">mode</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">mask</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="BaseImageDataset.read_image_opencv"><a class="viewcode-back" href="../../../autogen/data.datasets.html#data.datasets.dataset_base.BaseImageDataset.read_image_opencv">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_image_opencv</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span>
+            <span class="n">path</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">IMREAD_COLOR</span>
+        <span class="p">)</span>  <span class="c1"># Image is read in BGR Format and not RGB format</span></div>
+
+<div class="viewcode-block" id="BaseImageDataset.read_mask_opencv"><a class="viewcode-back" href="../../../autogen/data.datasets.html#data.datasets.dataset_base.BaseImageDataset.read_mask_opencv">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_mask_opencv</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">IMREAD_GRAYSCALE</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseImageDataset.to_device"><a class="viewcode-back" href="../../../autogen/data.datasets.html#data.datasets.dataset_base.BaseImageDataset.to_device">[docs]</a>    <span class="k">def</span> <span class="nf">to_device</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">move_to_device</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseImageDataset.convert_mask_to_tensor"><a class="viewcode-back" href="../../../autogen/data.datasets.html#data.datasets.dataset_base.BaseImageDataset.convert_mask_to_tensor">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">convert_mask_to_tensor</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
+        <span class="c1"># convert to tensor</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">mask</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseImageDataset.adjust_mask_value"><a class="viewcode-back" href="../../../autogen/data.datasets.html#data.datasets.dataset_base.BaseImageDataset.adjust_mask_value">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">adjust_mask_value</span><span class="p">():</span>
+        <span class="k">return</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="BaseImageDataset.class_names"><a class="viewcode-back" href="../../../autogen/data.datasets.html#data.datasets.dataset_base.BaseImageDataset.class_names">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">class_names</span><span class="p">():</span>
+        <span class="k">pass</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">(root=</span><span class="si">{}</span><span class="s2">, is_training=</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_training</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="move_to_device"><a class="viewcode-back" href="../../../autogen/data.datasets.html#data.datasets.dataset_base.move_to_device">[docs]</a><span class="k">def</span> <span class="nf">move_to_device</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span> <span class="n">device</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Dict</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Dict</span><span class="p">):</span>
+                <span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">move_to_device</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">):</span>
+                <span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+            <span class="s2">&quot;Inputs of type  Tensor or Dict of Tensors are only supported right now&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (C) 2022 Apple Inc. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

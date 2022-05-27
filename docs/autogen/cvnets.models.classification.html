@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cvnets.models.classification package &mdash; CVNet: High Performance Library for Computer Vision  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> CVNet: High Performance Library for Computer Vision
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sample_recipes.html">Sample Recipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how_to.html">How To</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_samplers.html">Data Samplers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../en/general/README-model-zoo.html">Model Zoo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CVNet: High Performance Library for Computer Vision</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>cvnets.models.classification package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/autogen/cvnets.models.classification.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="cvnets-models-classification-package">
+<h1>cvnets.models.classification package<a class="headerlink" href="#cvnets-models-classification-package" title="Permalink to this headline"></a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cvnets.models.classification.config.html">cvnets.models.classification.config package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cvnets.models.classification.config.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cvnets.models.classification.config.html#module-cvnets.models.classification.config.mobilenetv1">cvnets.models.classification.config.mobilenetv1 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cvnets.models.classification.config.html#module-cvnets.models.classification.config.mobilenetv2">cvnets.models.classification.config.mobilenetv2 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cvnets.models.classification.config.html#module-cvnets.models.classification.config.mobilenetv3">cvnets.models.classification.config.mobilenetv3 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cvnets.models.classification.config.html#module-cvnets.models.classification.config.mobilenetv4">cvnets.models.classification.config.mobilenetv4 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cvnets.models.classification.config.html#module-cvnets.models.classification.config.mobilevit">cvnets.models.classification.config.mobilevit module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cvnets.models.classification.config.html#module-cvnets.models.classification.config.mobilevit_v2">cvnets.models.classification.config.mobilevit_v2 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cvnets.models.classification.config.html#module-cvnets.models.classification.config.resnet">cvnets.models.classification.config.resnet module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cvnets.models.classification.config.html#module-cvnets.models.classification.config.vit">cvnets.models.classification.config.vit module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cvnets.models.classification.config.html#module-cvnets.models.classification.config">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="module-cvnets.models.classification.base_cls">
+<span id="cvnets-models-classification-base-cls-module"></span><h2>cvnets.models.classification.base_cls module<a class="headerlink" href="#module-cvnets.models.classification.base_cls" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cvnets.models.classification.base_cls.BaseEncoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cvnets.models.classification.base_cls.</span></span><span class="sig-name descname"><span class="pre">BaseEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/classification/base_cls.html#BaseEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.base_cls.BaseEncoder" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Base class for different classification models</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.base_cls.BaseEncoder.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/cvnets/models/classification/base_cls.html#BaseEncoder.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.base_cls.BaseEncoder.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.base_cls.BaseEncoder.add_arguments">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/classification/base_cls.html#BaseEncoder.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.base_cls.BaseEncoder.add_arguments" title="Permalink to this definition"></a></dt>
+<dd><p>Add model-specific arguments</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.base_cls.BaseEncoder.check_model">
+<span class="sig-name descname"><span class="pre">check_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/classification/base_cls.html#BaseEncoder.check_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.base_cls.BaseEncoder.check_model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.base_cls.BaseEncoder.reset_parameters">
+<span class="sig-name descname"><span class="pre">reset_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/classification/base_cls.html#BaseEncoder.reset_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.base_cls.BaseEncoder.reset_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize model weights</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.base_cls.BaseEncoder.update_classifier">
+<span class="sig-name descname"><span class="pre">update_classifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/classification/base_cls.html#BaseEncoder.update_classifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.base_cls.BaseEncoder.update_classifier" title="Permalink to this definition"></a></dt>
+<dd><p>This function updates the classification layer in a model. Useful for finetuning purposes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.base_cls.BaseEncoder.extract_end_points_all">
+<span class="sig-name descname"><span class="pre">extract_end_points_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_l5</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_l5_exp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/cvnets/models/classification/base_cls.html#BaseEncoder.extract_end_points_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.base_cls.BaseEncoder.extract_end_points_all" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.base_cls.BaseEncoder.extract_end_points_l4">
+<span class="sig-name descname"><span class="pre">extract_end_points_l4</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/cvnets/models/classification/base_cls.html#BaseEncoder.extract_end_points_l4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.base_cls.BaseEncoder.extract_end_points_l4" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.base_cls.BaseEncoder.extract_features">
+<span class="sig-name descname"><span class="pre">extract_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="reference internal" href="../_modules/cvnets/models/classification/base_cls.html#BaseEncoder.extract_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.base_cls.BaseEncoder.extract_features" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.base_cls.BaseEncoder.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="reference internal" href="../_modules/cvnets/models/classification/base_cls.html#BaseEncoder.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.base_cls.BaseEncoder.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.base_cls.BaseEncoder.freeze_norm_layers">
+<span class="sig-name descname"><span class="pre">freeze_norm_layers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/cvnets/models/classification/base_cls.html#BaseEncoder.freeze_norm_layers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.base_cls.BaseEncoder.freeze_norm_layers" title="Permalink to this definition"></a></dt>
+<dd><p>Freeze normalization layers</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.base_cls.BaseEncoder.get_trainable_parameters">
+<span class="sig-name descname"><span class="pre">get_trainable_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weight_decay</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_decay_bn_filter_bias</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/classification/base_cls.html#BaseEncoder.get_trainable_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.base_cls.BaseEncoder.get_trainable_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Get trainable parameters</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cvnets.models.classification.base_cls.BaseEncoder.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#cvnets.models.classification.base_cls.BaseEncoder.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.base_cls.BaseEncoder.profile_model">
+<span class="sig-name descname"><span class="pre">profile_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_classification</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/cvnets/models/classification/base_cls.html#BaseEncoder.profile_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.base_cls.BaseEncoder.profile_model" title="Permalink to this definition"></a></dt>
+<dd><p>Helper function to profile a model.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Model profiling is for reference only and may contain errors as it solely relies on user implementation to
+compute theoretical FLOPs</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cvnets.models.classification.mobilenetv1">
+<span id="cvnets-models-classification-mobilenetv1-module"></span><h2>cvnets.models.classification.mobilenetv1 module<a class="headerlink" href="#module-cvnets.models.classification.mobilenetv1" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cvnets.models.classification.mobilenetv1.MobileNetv1">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cvnets.models.classification.mobilenetv1.</span></span><span class="sig-name descname"><span class="pre">MobileNetv1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/classification/mobilenetv1.html#MobileNetv1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.mobilenetv1.MobileNetv1" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cvnets.models.classification.base_cls.BaseEncoder" title="cvnets.models.classification.base_cls.BaseEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">cvnets.models.classification.base_cls.BaseEncoder</span></code></a></p>
+<p>This class defines the <a class="reference external" href="https://arxiv.org/abs/1704.04861">MobileNet architecture</a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.mobilenetv1.MobileNetv1.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/cvnets/models/classification/mobilenetv1.html#MobileNetv1.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.mobilenetv1.MobileNetv1.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.mobilenetv1.MobileNetv1.add_arguments">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">argparse.ArgumentParser</span></span></span><a class="reference internal" href="../_modules/cvnets/models/classification/mobilenetv1.html#MobileNetv1.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.mobilenetv1.MobileNetv1.add_arguments" title="Permalink to this definition"></a></dt>
+<dd><p>Add model specific arguments</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cvnets.models.classification.mobilenetv1.MobileNetv1.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#cvnets.models.classification.mobilenetv1.MobileNetv1.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cvnets.models.classification.mobilenetv2">
+<span id="cvnets-models-classification-mobilenetv2-module"></span><h2>cvnets.models.classification.mobilenetv2 module<a class="headerlink" href="#module-cvnets.models.classification.mobilenetv2" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cvnets.models.classification.mobilenetv2.MobileNetV2">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cvnets.models.classification.mobilenetv2.</span></span><span class="sig-name descname"><span class="pre">MobileNetV2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/classification/mobilenetv2.html#MobileNetV2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.mobilenetv2.MobileNetV2" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cvnets.models.classification.base_cls.BaseEncoder" title="cvnets.models.classification.base_cls.BaseEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">cvnets.models.classification.base_cls.BaseEncoder</span></code></a></p>
+<p>This class defines the <a class="reference external" href="https://arxiv.org/abs/1801.04381">MobileNetv2 architecture</a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.mobilenetv2.MobileNetV2.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/cvnets/models/classification/mobilenetv2.html#MobileNetV2.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.mobilenetv2.MobileNetV2.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.mobilenetv2.MobileNetV2.add_arguments">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">argparse.ArgumentParser</span></span></span><a class="reference internal" href="../_modules/cvnets/models/classification/mobilenetv2.html#MobileNetV2.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.mobilenetv2.MobileNetV2.add_arguments" title="Permalink to this definition"></a></dt>
+<dd><p>Add model-specific arguments</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cvnets.models.classification.mobilenetv2.MobileNetV2.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#cvnets.models.classification.mobilenetv2.MobileNetV2.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cvnets.models.classification.mobilenetv3">
+<span id="cvnets-models-classification-mobilenetv3-module"></span><h2>cvnets.models.classification.mobilenetv3 module<a class="headerlink" href="#module-cvnets.models.classification.mobilenetv3" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cvnets.models.classification.mobilenetv3.MobileNetV3">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cvnets.models.classification.mobilenetv3.</span></span><span class="sig-name descname"><span class="pre">MobileNetV3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/classification/mobilenetv3.html#MobileNetV3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.mobilenetv3.MobileNetV3" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cvnets.models.classification.base_cls.BaseEncoder" title="cvnets.models.classification.base_cls.BaseEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">cvnets.models.classification.base_cls.BaseEncoder</span></code></a></p>
+<p>This class implements the <a class="reference external" href="https://arxiv.org/abs/1905.02244">MobileNetv3 architecture</a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.mobilenetv3.MobileNetV3.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/cvnets/models/classification/mobilenetv3.html#MobileNetV3.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.mobilenetv3.MobileNetV3.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.mobilenetv3.MobileNetV3.add_arguments">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/classification/mobilenetv3.html#MobileNetV3.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.mobilenetv3.MobileNetV3.add_arguments" title="Permalink to this definition"></a></dt>
+<dd><p>Add model-specific arguments</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cvnets.models.classification.mobilenetv3.MobileNetV3.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#cvnets.models.classification.mobilenetv3.MobileNetV3.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cvnets.models.classification.mobilevit">
+<span id="cvnets-models-classification-mobilevit-module"></span><h2>cvnets.models.classification.mobilevit module<a class="headerlink" href="#module-cvnets.models.classification.mobilevit" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cvnets.models.classification.mobilevit.MobileViT">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cvnets.models.classification.mobilevit.</span></span><span class="sig-name descname"><span class="pre">MobileViT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/classification/mobilevit.html#MobileViT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.mobilevit.MobileViT" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cvnets.models.classification.base_cls.BaseEncoder" title="cvnets.models.classification.base_cls.BaseEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">cvnets.models.classification.base_cls.BaseEncoder</span></code></a></p>
+<p>This class implements the <a class="reference external" href="https://arxiv.org/abs/2110.02178?context=cs.LG">MobileViT architecture</a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.mobilevit.MobileViT.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/cvnets/models/classification/mobilevit.html#MobileViT.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.mobilevit.MobileViT.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.mobilevit.MobileViT.add_arguments">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">argparse.ArgumentParser</span></span></span><a class="reference internal" href="../_modules/cvnets/models/classification/mobilevit.html#MobileViT.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.mobilevit.MobileViT.add_arguments" title="Permalink to this definition"></a></dt>
+<dd><p>Add model-specific arguments</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cvnets.models.classification.mobilevit.MobileViT.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#cvnets.models.classification.mobilevit.MobileViT.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cvnets.models.classification.mobilevit_v2">
+<span id="cvnets-models-classification-mobilevit-v2-module"></span><h2>cvnets.models.classification.mobilevit_v2 module<a class="headerlink" href="#module-cvnets.models.classification.mobilevit_v2" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cvnets.models.classification.mobilevit_v2.MobileViTv2">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cvnets.models.classification.mobilevit_v2.</span></span><span class="sig-name descname"><span class="pre">MobileViTv2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/classification/mobilevit_v2.html#MobileViTv2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.mobilevit_v2.MobileViTv2" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cvnets.models.classification.base_cls.BaseEncoder" title="cvnets.models.classification.base_cls.BaseEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">cvnets.models.classification.base_cls.BaseEncoder</span></code></a></p>
+<p>This class defines the MobileViTv2 architecture</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.mobilevit_v2.MobileViTv2.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/cvnets/models/classification/mobilevit_v2.html#MobileViTv2.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.mobilevit_v2.MobileViTv2.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.mobilevit_v2.MobileViTv2.add_arguments">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">argparse.ArgumentParser</span></span></span><a class="reference internal" href="../_modules/cvnets/models/classification/mobilevit_v2.html#MobileViTv2.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.mobilevit_v2.MobileViTv2.add_arguments" title="Permalink to this definition"></a></dt>
+<dd><p>Add model-specific arguments</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cvnets.models.classification.mobilevit_v2.MobileViTv2.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#cvnets.models.classification.mobilevit_v2.MobileViTv2.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cvnets.models.classification.resnet">
+<span id="cvnets-models-classification-resnet-module"></span><h2>cvnets.models.classification.resnet module<a class="headerlink" href="#module-cvnets.models.classification.resnet" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cvnets.models.classification.resnet.ResNet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cvnets.models.classification.resnet.</span></span><span class="sig-name descname"><span class="pre">ResNet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/classification/resnet.html#ResNet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.resnet.ResNet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cvnets.models.classification.base_cls.BaseEncoder" title="cvnets.models.classification.base_cls.BaseEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">cvnets.models.classification.base_cls.BaseEncoder</span></code></a></p>
+<p>This class implements the <a class="reference external" href="https://arxiv.org/pdf/1512.03385.pdf">ResNet architecture</a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Our ResNet implementation is different from the original implementation in two ways:
+1. First 7x7 strided conv is replaced with 3x3 strided conv
+2. MaxPool operation is replaced with another 3x3 strided depth-wise conv</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.resnet.ResNet.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/cvnets/models/classification/resnet.html#ResNet.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.resnet.ResNet.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.resnet.ResNet.add_arguments">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">argparse.ArgumentParser</span></span></span><a class="reference internal" href="../_modules/cvnets/models/classification/resnet.html#ResNet.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.resnet.ResNet.add_arguments" title="Permalink to this definition"></a></dt>
+<dd><p>Add model-specific arguments</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cvnets.models.classification.resnet.ResNet.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#cvnets.models.classification.resnet.ResNet.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cvnets.models.classification.vit">
+<span id="cvnets-models-classification-vit-module"></span><h2>cvnets.models.classification.vit module<a class="headerlink" href="#module-cvnets.models.classification.vit" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cvnets.models.classification.vit.VisionTransformer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cvnets.models.classification.vit.</span></span><span class="sig-name descname"><span class="pre">VisionTransformer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/classification/vit.html#VisionTransformer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.vit.VisionTransformer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cvnets.models.classification.base_cls.BaseEncoder" title="cvnets.models.classification.base_cls.BaseEncoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">cvnets.models.classification.base_cls.BaseEncoder</span></code></a></p>
+<p>This class defines the <a class="reference external" href="https://arxiv.org/abs/2010.11929">Vision Transformer architecture</a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Our implementation is different from the original implementation in two ways:
+1. Kernel size is odd.
+2. Use sinusoidal positional encoding, allowing us to use ViT with any input size
+3. Do not use DropoutPath</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.vit.VisionTransformer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/cvnets/models/classification/vit.html#VisionTransformer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.vit.VisionTransformer.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.vit.VisionTransformer.add_arguments">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">argparse.ArgumentParser</span></span></span><a class="reference internal" href="../_modules/cvnets/models/classification/vit.html#VisionTransformer.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.vit.VisionTransformer.add_arguments" title="Permalink to this definition"></a></dt>
+<dd><p>Add model-specific arguments</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.vit.VisionTransformer.extract_patch_embeddings">
+<span class="sig-name descname"><span class="pre">extract_patch_embeddings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="reference internal" href="../_modules/cvnets/models/classification/vit.html#VisionTransformer.extract_patch_embeddings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.vit.VisionTransformer.extract_patch_embeddings" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.vit.VisionTransformer.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="reference internal" href="../_modules/cvnets/models/classification/vit.html#VisionTransformer.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.vit.VisionTransformer.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cvnets.models.classification.vit.VisionTransformer.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#cvnets.models.classification.vit.VisionTransformer.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cvnets.models.classification.vit.VisionTransformer.profile_model">
+<span class="sig-name descname"><span class="pre">profile_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/cvnets/models/classification/vit.html#VisionTransformer.profile_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.vit.VisionTransformer.profile_model" title="Permalink to this definition"></a></dt>
+<dd><p>Helper function to profile a model.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Model profiling is for reference only and may contain errors as it solely relies on user implementation to
+compute theoretical FLOPs</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cvnets.models.classification">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cvnets.models.classification" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cvnets.models.classification.register_cls_models">
+<span class="sig-prename descclassname"><span class="pre">cvnets.models.classification.</span></span><span class="sig-name descname"><span class="pre">register_cls_models</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/classification.html#register_cls_models"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.register_cls_models" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cvnets.models.classification.build_classification_model">
+<span class="sig-prename descclassname"><span class="pre">cvnets.models.classification.</span></span><span class="sig-name descname"><span class="pre">build_classification_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/classification.html#build_classification_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.build_classification_model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cvnets.models.classification.std_cls_model_args">
+<span class="sig-prename descclassname"><span class="pre">cvnets.models.classification.</span></span><span class="sig-name descname"><span class="pre">std_cls_model_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/classification.html#std_cls_model_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.std_cls_model_args" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cvnets.models.classification.arguments_classification">
+<span class="sig-prename descclassname"><span class="pre">cvnets.models.classification.</span></span><span class="sig-name descname"><span class="pre">arguments_classification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cvnets/models/classification.html#arguments_classification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cvnets.models.classification.arguments_classification" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (C) 2022 Apple Inc. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

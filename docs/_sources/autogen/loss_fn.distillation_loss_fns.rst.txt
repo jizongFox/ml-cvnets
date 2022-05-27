@@ -1,0 +1,21 @@
+loss\_fn.distillation\_loss\_fns package
+========================================
+
+Submodules
+----------
+
+loss\_fn.distillation\_loss\_fns.vanilla module
+-----------------------------------------------
+
+.. automodule:: loss_fn.distillation_loss_fns.vanilla
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: loss_fn.distillation_loss_fns
+   :members:
+   :undoc-members:
+   :show-inheritance:

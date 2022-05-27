@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cvnets.models.classification.vit &mdash; CVNet: High Performance Library for Computer Vision  documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> CVNet: High Performance Library for Computer Vision
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../sample_recipes.html">Sample Recipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how_to.html">How To</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../data_samplers.html">Data Samplers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../en/general/README-model-zoo.html">Model Zoo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">CVNet: High Performance Library for Computer Vision</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../../models.html">cvnets.models</a> &raquo;</li>
+          <li><a href="../classification.html">cvnets.models.classification</a> &raquo;</li>
+      <li>cvnets.models.classification.vit</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cvnets.models.classification.vit</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># For licensing see accompanying LICENSE file.</span>
+<span class="c1"># Copyright (C) 2022 Apple Inc. All Rights Reserved.</span>
+<span class="c1">#</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span><span class="p">,</span> <span class="n">Tensor</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">logger</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">register_cls_models</span><span class="p">,</span> <span class="n">BaseEncoder</span>
+<span class="kn">from</span> <span class="nn">.config.vit</span> <span class="kn">import</span> <span class="n">get_configuration</span>
+<span class="kn">from</span> <span class="nn">...layers</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ConvLayer</span><span class="p">,</span>
+    <span class="n">LinearLayer</span><span class="p">,</span>
+    <span class="n">get_normalization_layer</span><span class="p">,</span>
+    <span class="n">SinusoidalPositionalEncoding</span><span class="p">,</span>
+    <span class="n">Dropout</span><span class="p">,</span>
+    <span class="n">LearnablePositionEncoding</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">...modules</span> <span class="kn">import</span> <span class="n">TransformerEncoder</span>
+
+
+<div class="viewcode-block" id="VisionTransformer"><a class="viewcode-back" href="../../../../autogen/cvnets.models.classification.html#cvnets.models.classification.vit.VisionTransformer">[docs]</a><span class="nd">@register_cls_models</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;vit&quot;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">VisionTransformer</span><span class="p">(</span><span class="n">BaseEncoder</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class defines the `Vision Transformer architecture &lt;https://arxiv.org/abs/2010.11929&gt;`_</span>
+
+<span class="sd">    .. note::</span>
+<span class="sd">        Our implementation is different from the original implementation in two ways:</span>
+<span class="sd">        1. Kernel size is odd.</span>
+<span class="sd">        2. Use sinusoidal positional encoding, allowing us to use ViT with any input size</span>
+<span class="sd">        3. Do not use DropoutPath</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="VisionTransformer.__init__"><a class="viewcode-back" href="../../../../autogen/cvnets.models.classification.html#cvnets.models.classification.vit.VisionTransformer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">image_channels</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="n">num_classes</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;model.classification.n_classes&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">vit_config</span> <span class="o">=</span> <span class="n">get_configuration</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span>
+
+        <span class="n">patch_size</span> <span class="o">=</span> <span class="n">vit_config</span><span class="p">[</span><span class="s2">&quot;patch_size&quot;</span><span class="p">]</span>
+        <span class="n">embed_dim</span> <span class="o">=</span> <span class="n">vit_config</span><span class="p">[</span><span class="s2">&quot;embed_dim&quot;</span><span class="p">]</span>
+        <span class="n">ffn_dim</span> <span class="o">=</span> <span class="n">vit_config</span><span class="p">[</span><span class="s2">&quot;ffn_dim&quot;</span><span class="p">]</span>
+        <span class="n">pos_emb_drop_p</span> <span class="o">=</span> <span class="n">vit_config</span><span class="p">[</span><span class="s2">&quot;pos_emb_drop_p&quot;</span><span class="p">]</span>
+        <span class="n">n_transformer_layers</span> <span class="o">=</span> <span class="n">vit_config</span><span class="p">[</span><span class="s2">&quot;n_transformer_layers&quot;</span><span class="p">]</span>
+        <span class="n">num_heads</span> <span class="o">=</span> <span class="n">vit_config</span><span class="p">[</span><span class="s2">&quot;n_attn_heads&quot;</span><span class="p">]</span>
+        <span class="n">attn_dropout</span> <span class="o">=</span> <span class="n">vit_config</span><span class="p">[</span><span class="s2">&quot;attn_dropout&quot;</span><span class="p">]</span>
+        <span class="n">dropout</span> <span class="o">=</span> <span class="n">vit_config</span><span class="p">[</span><span class="s2">&quot;dropout&quot;</span><span class="p">]</span>
+        <span class="n">ffn_dropout</span> <span class="o">=</span> <span class="n">vit_config</span><span class="p">[</span><span class="s2">&quot;ffn_dropout&quot;</span><span class="p">]</span>
+        <span class="n">norm_layer</span> <span class="o">=</span> <span class="n">vit_config</span><span class="p">[</span><span class="s2">&quot;norm_layer&quot;</span><span class="p">]</span>
+
+        <span class="n">kernel_size</span> <span class="o">=</span> <span class="n">patch_size</span>
+        <span class="k">if</span> <span class="n">patch_size</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">kernel_size</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">patch_emb</span> <span class="o">=</span> <span class="n">ConvLayer</span><span class="p">(</span>
+            <span class="n">opts</span><span class="o">=</span><span class="n">opts</span><span class="p">,</span>
+            <span class="n">in_channels</span><span class="o">=</span><span class="n">image_channels</span><span class="p">,</span>
+            <span class="n">out_channels</span><span class="o">=</span><span class="n">embed_dim</span><span class="p">,</span>
+            <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span>
+            <span class="n">stride</span><span class="o">=</span><span class="n">patch_size</span><span class="p">,</span>
+            <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">use_norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">use_act</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">use_cls_token</span> <span class="o">=</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;model.classification.vit.no_cls_token&quot;</span><span class="p">,</span> <span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">use_cls_token</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cls_token</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cls_token</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">transformer_blocks</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">TransformerEncoder</span><span class="p">(</span>
+                <span class="n">opts</span><span class="o">=</span><span class="n">opts</span><span class="p">,</span>
+                <span class="n">embed_dim</span><span class="o">=</span><span class="n">embed_dim</span><span class="p">,</span>
+                <span class="n">ffn_latent_dim</span><span class="o">=</span><span class="n">ffn_dim</span><span class="p">,</span>
+                <span class="n">num_heads</span><span class="o">=</span><span class="n">num_heads</span><span class="p">,</span>
+                <span class="n">attn_dropout</span><span class="o">=</span><span class="n">attn_dropout</span><span class="p">,</span>
+                <span class="n">dropout</span><span class="o">=</span><span class="n">dropout</span><span class="p">,</span>
+                <span class="n">ffn_dropout</span><span class="o">=</span><span class="n">ffn_dropout</span><span class="p">,</span>
+                <span class="n">transformer_norm_layer</span><span class="o">=</span><span class="n">norm_layer</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_transformer_layers</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="n">transformer_blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">get_normalization_layer</span><span class="p">(</span>
+                <span class="n">opts</span><span class="o">=</span><span class="n">opts</span><span class="p">,</span> <span class="n">num_features</span><span class="o">=</span><span class="n">embed_dim</span><span class="p">,</span> <span class="n">norm_type</span><span class="o">=</span><span class="n">norm_layer</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">transformer_blocks</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span> <span class="o">=</span> <span class="n">LinearLayer</span><span class="p">(</span><span class="n">embed_dim</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_parameters</span><span class="p">(</span><span class="n">opts</span><span class="o">=</span><span class="n">opts</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cls_token</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">trunc_normal_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cls_token</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+
+        <span class="n">vocab_size</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;model.classification.vit.vocab_size&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="s2">&quot;model.classification.vit.learnable_pos_emb&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos_embed</span> <span class="o">=</span> <span class="n">LearnablePositionEncoding</span><span class="p">(</span>
+                <span class="n">num_embeddings</span><span class="o">=</span><span class="n">vocab_size</span><span class="p">,</span>
+                <span class="n">embed_dim</span><span class="o">=</span><span class="n">embed_dim</span><span class="p">,</span>
+                <span class="n">dropout</span><span class="o">=</span><span class="n">pos_emb_drop_p</span><span class="p">,</span>
+                <span class="n">channels_last</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">normal_</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pos_embed</span><span class="o">.</span><span class="n">pos_emb</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="n">embed_dim</span> <span class="o">**</span> <span class="o">-</span><span class="mf">0.5</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos_embed</span> <span class="o">=</span> <span class="n">SinusoidalPositionalEncoding</span><span class="p">(</span>
+                <span class="n">d_model</span><span class="o">=</span><span class="n">embed_dim</span><span class="p">,</span>
+                <span class="n">dropout</span><span class="o">=</span><span class="n">pos_emb_drop_p</span><span class="p">,</span>
+                <span class="n">channels_last</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">max_len</span><span class="o">=</span><span class="n">vocab_size</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="VisionTransformer.add_arguments"><a class="viewcode-back" href="../../../../autogen/cvnets.models.classification.html#cvnets.models.classification.vit.VisionTransformer.add_arguments">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--model.classification.vit.mode&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="s2">&quot;tiny&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;ViT mode. Default is Tiny&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--model.classification.vit.dropout&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Dropout in ViT layers. Defaults to 0.0&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--model.classification.vit.vocab-size&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Vocab size (or max patches) in ViT. Defaults to 1000&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--model.classification.vit.learnable-pos-emb&quot;</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use learnable positional encoding instead of sinusiodal&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--model.classification.vit.no-cls-token&quot;</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Do not use classificaiton token&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">parser</span></div>
+
+<div class="viewcode-block" id="VisionTransformer.extract_patch_embeddings"><a class="viewcode-back" href="../../../../autogen/cvnets.models.classification.html#cvnets.models.classification.vit.VisionTransformer.extract_patch_embeddings">[docs]</a>    <span class="k">def</span> <span class="nf">extract_patch_embeddings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="c1"># x -&gt; [B, C, H, W]</span>
+        <span class="n">B_</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># [B, C, H, W] --&gt; [B, C, n_h, n_w]</span>
+        <span class="n">patch_emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_emb</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="c1"># [B, C, n_h, n_w] --&gt; [B, C, N]</span>
+        <span class="n">patch_emb</span> <span class="o">=</span> <span class="n">patch_emb</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="c1"># [B, C, N] --&gt; [B, N, C]</span>
+        <span class="n">patch_emb</span> <span class="o">=</span> <span class="n">patch_emb</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span>
+
+        <span class="c1"># add classification token</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cls_token</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cls_tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cls_token</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">B_</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">patch_emb</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">cls_tokens</span><span class="p">,</span> <span class="n">patch_emb</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">patch_emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_embed</span><span class="p">(</span><span class="n">patch_emb</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">patch_emb</span></div>
+
+<div class="viewcode-block" id="VisionTransformer.forward"><a class="viewcode-back" href="../../../../autogen/cvnets.models.classification.html#cvnets.models.classification.vit.VisionTransformer.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_patch_embeddings</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="c1"># grab the first token and classify</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cls_token</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span></div>
+
+<div class="viewcode-block" id="VisionTransformer.profile_model"><a class="viewcode-back" href="../../../../autogen/cvnets.models.classification.html#cvnets.models.classification.vit.VisionTransformer.profile_model">[docs]</a>    <span class="k">def</span> <span class="nf">profile_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Model statistics for an input of size </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">size</span><span class="p">()))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">double_dash_line</span><span class="p">(</span><span class="n">dashes</span><span class="o">=</span><span class="mi">65</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:&gt;35}</span><span class="s2"> Summary&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">double_dash_line</span><span class="p">(</span><span class="n">dashes</span><span class="o">=</span><span class="mi">65</span><span class="p">)</span>
+
+        <span class="n">out_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">overall_params</span><span class="p">,</span> <span class="n">overall_macs</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
+        <span class="n">patch_emb</span><span class="p">,</span> <span class="n">overall_params</span><span class="p">,</span> <span class="n">overall_macs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_profile_layers</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">patch_emb</span><span class="p">,</span>
+            <span class="nb">input</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span>
+            <span class="n">overall_params</span><span class="o">=</span><span class="n">overall_params</span><span class="p">,</span>
+            <span class="n">overall_macs</span><span class="o">=</span><span class="n">overall_macs</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">patch_emb</span> <span class="o">=</span> <span class="n">patch_emb</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># [B, C, N] --&gt; [B, N, C]</span>
+        <span class="n">patch_emb</span> <span class="o">=</span> <span class="n">patch_emb</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cls_token</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># add classification token</span>
+            <span class="n">cls_tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cls_token</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">patch_emb</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">patch_emb</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">cls_tokens</span><span class="p">,</span> <span class="n">patch_emb</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">patch_emb</span><span class="p">,</span> <span class="n">overall_params</span><span class="p">,</span> <span class="n">overall_macs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_profile_layers</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="p">,</span>
+            <span class="nb">input</span><span class="o">=</span><span class="n">patch_emb</span><span class="p">,</span>
+            <span class="n">overall_params</span><span class="o">=</span><span class="n">overall_params</span><span class="p">,</span>
+            <span class="n">overall_macs</span><span class="o">=</span><span class="n">overall_macs</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">patch_emb</span><span class="p">,</span> <span class="n">overall_params</span><span class="p">,</span> <span class="n">overall_macs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_profile_layers</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="p">,</span>
+            <span class="nb">input</span><span class="o">=</span><span class="n">patch_emb</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="n">overall_params</span><span class="o">=</span><span class="n">overall_params</span><span class="p">,</span>
+            <span class="n">overall_macs</span><span class="o">=</span><span class="n">overall_macs</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">double_dash_line</span><span class="p">(</span><span class="n">dashes</span><span class="o">=</span><span class="mi">65</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:&lt;20}</span><span class="s2"> = </span><span class="si">{:&gt;8.3f}</span><span class="s2"> M&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;Overall parameters&quot;</span><span class="p">,</span> <span class="n">overall_params</span> <span class="o">/</span> <span class="mf">1e6</span><span class="p">))</span>
+        <span class="c1"># Counting Addition and Multiplication as 1 operation</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:&lt;20}</span><span class="s2"> = </span><span class="si">{:&gt;8.3f}</span><span class="s2"> M&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;Overall MACs&quot;</span><span class="p">,</span> <span class="n">overall_macs</span> <span class="o">/</span> <span class="mf">1e6</span><span class="p">))</span>
+        <span class="n">overall_params_py</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">p</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">()])</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="si">{:&lt;20}</span><span class="s2"> = </span><span class="si">{:&gt;8.3f}</span><span class="s2"> M&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="s2">&quot;Overall parameters (sanity check)&quot;</span><span class="p">,</span> <span class="n">overall_params_py</span> <span class="o">/</span> <span class="mf">1e6</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">double_dash_line</span><span class="p">(</span><span class="n">dashes</span><span class="o">=</span><span class="mi">65</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (C) 2022 Apple Inc. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

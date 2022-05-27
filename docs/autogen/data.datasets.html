@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>data.datasets package &mdash; CVNet: High Performance Library for Computer Vision  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> CVNet: High Performance Library for Computer Vision
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sample_recipes.html">Sample Recipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how_to.html">How To</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_samplers.html">Data Samplers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../en/general/README-model-zoo.html">Model Zoo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CVNet: High Performance Library for Computer Vision</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>data.datasets package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/autogen/data.datasets.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="data-datasets-package">
+<h1>data.datasets package<a class="headerlink" href="#data-datasets-package" title="Permalink to this headline"></a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="data.datasets.classification.html">data.datasets.classification package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data.datasets.classification.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.datasets.classification.html#module-data.datasets.classification.imagenet">data.datasets.classification.imagenet module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.datasets.classification.html#module-data.datasets.classification.imagenet_opencv">data.datasets.classification.imagenet_opencv module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.datasets.classification.html#module-data.datasets.classification">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data.datasets.detection.html">data.datasets.detection package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data.datasets.detection.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.datasets.detection.html#module-data.datasets.detection.coco_base">data.datasets.detection.coco_base module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.datasets.detection.html#module-data.datasets.detection.coco_ssd">data.datasets.detection.coco_ssd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.datasets.detection.html#module-data.datasets.detection">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data.datasets.segmentation.html">data.datasets.segmentation package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data.datasets.segmentation.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.datasets.segmentation.html#module-data.datasets.segmentation.ade20k">data.datasets.segmentation.ade20k module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.datasets.segmentation.html#module-data.datasets.segmentation.coco_segmentation">data.datasets.segmentation.coco_segmentation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.datasets.segmentation.html#module-data.datasets.segmentation.pascal_voc">data.datasets.segmentation.pascal_voc module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.datasets.segmentation.html#module-data.datasets.segmentation">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data.datasets.video_classification.html">data.datasets.video_classification package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data.datasets.video_classification.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.datasets.video_classification.html#module-data.datasets.video_classification.kinetics">data.datasets.video_classification.kinetics module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.datasets.video_classification.html#module-data.datasets.video_classification">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="module-data.datasets.dataset_base">
+<span id="data-datasets-dataset-base-module"></span><h2>data.datasets.dataset_base module<a class="headerlink" href="#module-data.datasets.dataset_base" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="data.datasets.dataset_base.BaseImageDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">data.datasets.dataset_base.</span></span><span class="sig-name descname"><span class="pre">BaseImageDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_training</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_evaluation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets/dataset_base.html#BaseImageDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.dataset_base.BaseImageDataset" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.dataset.Dataset</span></code></p>
+<p>Base Dataset class for Image datasets</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="data.datasets.dataset_base.BaseImageDataset.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_training</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_evaluation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets/dataset_base.html#BaseImageDataset.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.dataset_base.BaseImageDataset.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="data.datasets.dataset_base.BaseImageDataset.add_arguments">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets/dataset_base.html#BaseImageDataset.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.dataset_base.BaseImageDataset.add_arguments" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="data.datasets.dataset_base.BaseImageDataset.load_from_server">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load_from_server</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_training</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets/dataset_base.html#BaseImageDataset.load_from_server"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.dataset_base.BaseImageDataset.load_from_server" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="data.datasets.dataset_base.BaseImageDataset.read_image_pil">
+<span class="sig-name descname"><span class="pre">read_image_pil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets/dataset_base.html#BaseImageDataset.read_image_pil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.dataset_base.BaseImageDataset.read_image_pil" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="data.datasets.dataset_base.BaseImageDataset.read_pil_image_torchvision">
+<span class="sig-name descname"><span class="pre">read_pil_image_torchvision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets/dataset_base.html#BaseImageDataset.read_pil_image_torchvision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.dataset_base.BaseImageDataset.read_pil_image_torchvision" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="data.datasets.dataset_base.BaseImageDataset.read_image_tensor">
+<span class="sig-name descname"><span class="pre">read_image_tensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets/dataset_base.html#BaseImageDataset.read_image_tensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.dataset_base.BaseImageDataset.read_image_tensor" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="data.datasets.dataset_base.BaseImageDataset.read_mask_pil">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_mask_pil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets/dataset_base.html#BaseImageDataset.read_mask_pil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.dataset_base.BaseImageDataset.read_mask_pil" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="data.datasets.dataset_base.BaseImageDataset.read_image_opencv">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_image_opencv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets/dataset_base.html#BaseImageDataset.read_image_opencv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.dataset_base.BaseImageDataset.read_image_opencv" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="data.datasets.dataset_base.BaseImageDataset.read_mask_opencv">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_mask_opencv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets/dataset_base.html#BaseImageDataset.read_mask_opencv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.dataset_base.BaseImageDataset.read_mask_opencv" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="data.datasets.dataset_base.BaseImageDataset.to_device">
+<span class="sig-name descname"><span class="pre">to_device</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/data/datasets/dataset_base.html#BaseImageDataset.to_device"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.dataset_base.BaseImageDataset.to_device" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="data.datasets.dataset_base.BaseImageDataset.convert_mask_to_tensor">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convert_mask_to_tensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mask</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets/dataset_base.html#BaseImageDataset.convert_mask_to_tensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.dataset_base.BaseImageDataset.convert_mask_to_tensor" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="data.datasets.dataset_base.BaseImageDataset.adjust_mask_value">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">adjust_mask_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets/dataset_base.html#BaseImageDataset.adjust_mask_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.dataset_base.BaseImageDataset.adjust_mask_value" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="data.datasets.dataset_base.BaseImageDataset.class_names">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">class_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets/dataset_base.html#BaseImageDataset.class_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.dataset_base.BaseImageDataset.class_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="data.datasets.dataset_base.move_to_device">
+<span class="sig-prename descclassname"><span class="pre">data.datasets.dataset_base.</span></span><span class="sig-name descname"><span class="pre">move_to_device</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/data/datasets/dataset_base.html#move_to_device"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.dataset_base.move_to_device" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-data.datasets">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-data.datasets" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="data.datasets.register_dataset">
+<span class="sig-prename descclassname"><span class="pre">data.datasets.</span></span><span class="sig-name descname"><span class="pre">register_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets.html#register_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.register_dataset" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="data.datasets.supported_dataset_str">
+<span class="sig-prename descclassname"><span class="pre">data.datasets.</span></span><span class="sig-name descname"><span class="pre">supported_dataset_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_category</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets.html#supported_dataset_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.supported_dataset_str" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="data.datasets.evaluation_datasets">
+<span class="sig-prename descclassname"><span class="pre">data.datasets.</span></span><span class="sig-name descname"><span class="pre">evaluation_datasets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets.html#evaluation_datasets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.evaluation_datasets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="data.datasets.train_val_datasets">
+<span class="sig-prename descclassname"><span class="pre">data.datasets.</span></span><span class="sig-name descname"><span class="pre">train_val_datasets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets.html#train_val_datasets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.train_val_datasets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="data.datasets.trove_dataset_args">
+<span class="sig-prename descclassname"><span class="pre">data.datasets.</span></span><span class="sig-name descname"><span class="pre">trove_dataset_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets.html#trove_dataset_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.trove_dataset_args" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="data.datasets.general_dataset_args">
+<span class="sig-prename descclassname"><span class="pre">data.datasets.</span></span><span class="sig-name descname"><span class="pre">general_dataset_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets.html#general_dataset_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.general_dataset_args" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="data.datasets.arguments_dataset">
+<span class="sig-prename descclassname"><span class="pre">data.datasets.</span></span><span class="sig-name descname"><span class="pre">arguments_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/datasets.html#arguments_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#data.datasets.arguments_dataset" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (C) 2022 Apple Inc. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

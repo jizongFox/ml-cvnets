@@ -1,0 +1,29 @@
+loss\_fn.classification\_loss\_fns package
+==========================================
+
+Submodules
+----------
+
+loss\_fn.classification\_loss\_fns.binary\_cross\_entropy module
+----------------------------------------------------------------
+
+.. automodule:: loss_fn.classification_loss_fns.binary_cross_entropy
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+loss\_fn.classification\_loss\_fns.cross\_entropy module
+--------------------------------------------------------
+
+.. automodule:: loss_fn.classification_loss_fns.cross_entropy
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: loss_fn.classification_loss_fns
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,37 @@
+data.video\_reader package
+==========================
+
+Submodules
+----------
+
+data.video\_reader.base\_video\_reader module
+---------------------------------------------
+
+.. automodule:: data.video_reader.base_video_reader
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+data.video\_reader.default\_video\_reader module
+------------------------------------------------
+
+.. automodule:: data.video_reader.default_video_reader
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+data.video\_reader.key\_frame\_reader module
+--------------------------------------------
+
+.. automodule:: data.video_reader.key_frame_reader
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: data.video_reader
+   :members:
+   :undoc-members:
+   :show-inheritance:

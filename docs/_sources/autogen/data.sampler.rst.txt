@@ -1,0 +1,69 @@
+data.sampler package
+====================
+
+Submodules
+----------
+
+data.sampler.base\_sampler module
+---------------------------------
+
+.. automodule:: data.sampler.base_sampler
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+data.sampler.batch\_sampler module
+----------------------------------
+
+.. automodule:: data.sampler.batch_sampler
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+data.sampler.multi\_scale\_sampler module
+-----------------------------------------
+
+.. automodule:: data.sampler.multi_scale_sampler
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+data.sampler.utils module
+-------------------------
+
+.. automodule:: data.sampler.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+data.sampler.variable\_batch\_sampler module
+--------------------------------------------
+
+.. automodule:: data.sampler.variable_batch_sampler
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+data.sampler.video\_batch\_sampler module
+-----------------------------------------
+
+.. automodule:: data.sampler.video_batch_sampler
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+data.sampler.video\_variable\_seq\_sampler module
+-------------------------------------------------
+
+.. automodule:: data.sampler.video_variable_seq_sampler
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: data.sampler
+   :members:
+   :undoc-members:
+   :show-inheritance:

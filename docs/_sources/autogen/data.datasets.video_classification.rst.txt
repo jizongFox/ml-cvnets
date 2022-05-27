@@ -1,0 +1,21 @@
+data.datasets.video\_classification package
+===========================================
+
+Submodules
+----------
+
+data.datasets.video\_classification.kinetics module
+---------------------------------------------------
+
+.. automodule:: data.datasets.video_classification.kinetics
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: data.datasets.video_classification
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>loss_fn.distillation_loss_fns package &mdash; CVNet: High Performance Library for Computer Vision  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> CVNet: High Performance Library for Computer Vision
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sample_recipes.html">Sample Recipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how_to.html">How To</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_samplers.html">Data Samplers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../en/general/README-model-zoo.html">Model Zoo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CVNet: High Performance Library for Computer Vision</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>loss_fn.distillation_loss_fns package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/autogen/loss_fn.distillation_loss_fns.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="loss-fn-distillation-loss-fns-package">
+<h1>loss_fn.distillation_loss_fns package<a class="headerlink" href="#loss-fn-distillation-loss-fns-package" title="Permalink to this headline"></a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="module-loss_fn.distillation_loss_fns.vanilla">
+<span id="loss-fn-distillation-loss-fns-vanilla-module"></span><h2>loss_fn.distillation_loss_fns.vanilla module<a class="headerlink" href="#module-loss_fn.distillation_loss_fns.vanilla" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">loss_fn.distillation_loss_fns.vanilla.</span></span><span class="sig-name descname"><span class="pre">VanillaDistillationLoss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/loss_fn/distillation_loss_fns/vanilla.html#VanillaDistillationLoss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="loss_fn.html#loss_fn.base_criteria.BaseCriteria" title="loss_fn.base_criteria.BaseCriteria"><code class="xref py py-class docutils literal notranslate"><span class="pre">loss_fn.base_criteria.BaseCriteria</span></code></a></p>
+<p>Basic Distillation loss</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/loss_fn/distillation_loss_fns/vanilla.html#VanillaDistillationLoss.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes internal Module state, shared by both nn.Module and ScriptModule.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.build_teacher_model">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">build_teacher_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.nn.modules.module.Module</span></span></span><a class="reference internal" href="../_modules/loss_fn/distillation_loss_fns/vanilla.html#VanillaDistillationLoss.build_teacher_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.build_teacher_model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.build_label_loss_fn">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">build_label_loss_fn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opts</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="loss_fn.html#loss_fn.base_criteria.BaseCriteria" title="loss_fn.base_criteria.BaseCriteria"><span class="pre">loss_fn.base_criteria.BaseCriteria</span></a></span></span><a class="reference internal" href="../_modules/loss_fn/distillation_loss_fns/vanilla.html#VanillaDistillationLoss.build_label_loss_fn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.build_label_loss_fn" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.compute_soft_distillation_loss">
+<span class="sig-name descname"><span class="pre">compute_soft_distillation_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_sample</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prediction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="reference internal" href="../_modules/loss_fn/distillation_loss_fns/vanilla.html#VanillaDistillationLoss.compute_soft_distillation_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.compute_soft_distillation_loss" title="Permalink to this definition"></a></dt>
+<dd><p>Details about soft-distillation here: <a class="reference external" href="https://arxiv.org/abs/2012.12877">https://arxiv.org/abs/2012.12877</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.compute_hard_distillation_loss">
+<span class="sig-name descname"><span class="pre">compute_hard_distillation_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_sample</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prediction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="reference internal" href="../_modules/loss_fn/distillation_loss_fns/vanilla.html#VanillaDistillationLoss.compute_hard_distillation_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.compute_hard_distillation_loss" title="Permalink to this definition"></a></dt>
+<dd><p>Details about Distillation here: <a class="reference external" href="https://arxiv.org/abs/1503.02531">https://arxiv.org/abs/1503.02531</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.compute_weights">
+<span class="sig-name descname"><span class="pre">compute_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/loss_fn/distillation_loss_fns/vanilla.html#VanillaDistillationLoss.compute_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.compute_weights" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_sample</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prediction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="reference internal" href="../_modules/loss_fn/distillation_loss_fns/vanilla.html#VanillaDistillationLoss.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.add_arguments">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.ArgumentParser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/loss_fn/distillation_loss_fns/vanilla.html#VanillaDistillationLoss.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.add_arguments" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#loss_fn.distillation_loss_fns.vanilla.VanillaDistillationLoss.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-loss_fn.distillation_loss_fns">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-loss_fn.distillation_loss_fns" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="loss_fn.distillation_loss_fns.register_distillation_loss_fn">
+<span class="sig-prename descclassname"><span class="pre">loss_fn.distillation_loss_fns.</span></span><span class="sig-name descname"><span class="pre">register_distillation_loss_fn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/loss_fn/distillation_loss_fns.html#register_distillation_loss_fn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#loss_fn.distillation_loss_fns.register_distillation_loss_fn" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (C) 2022 Apple Inc. All Rights Reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

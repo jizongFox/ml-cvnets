@@ -1,0 +1,29 @@
+data.datasets.detection package
+===============================
+
+Submodules
+----------
+
+data.datasets.detection.coco\_base module
+-----------------------------------------
+
+.. automodule:: data.datasets.detection.coco_base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+data.datasets.detection.coco\_ssd module
+----------------------------------------
+
+.. automodule:: data.datasets.detection.coco_ssd
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: data.datasets.detection
+   :members:
+   :undoc-members:
+   :show-inheritance:

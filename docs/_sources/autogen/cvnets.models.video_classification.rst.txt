@@ -1,0 +1,29 @@
+cvnets.models.video\_classification package
+===========================================
+
+Submodules
+----------
+
+cvnets.models.video\_classification.base\_cls module
+----------------------------------------------------
+
+.. automodule:: cvnets.models.video_classification.base_cls
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cvnets.models.video\_classification.mobilevit\_st module
+--------------------------------------------------------
+
+.. automodule:: cvnets.models.video_classification.mobilevit_st
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: cvnets.models.video_classification
+   :members:
+   :undoc-members:
+   :show-inheritance:

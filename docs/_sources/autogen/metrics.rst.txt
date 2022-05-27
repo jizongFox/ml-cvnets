@@ -1,0 +1,69 @@
+metrics package
+===============
+
+Submodules
+----------
+
+metrics.coco\_map module
+------------------------
+
+.. automodule:: metrics.coco_map
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+metrics.confusion\_mat module
+-----------------------------
+
+.. automodule:: metrics.confusion_mat
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+metrics.intersection\_over\_union module
+----------------------------------------
+
+.. automodule:: metrics.intersection_over_union
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+metrics.metric\_monitor module
+------------------------------
+
+.. automodule:: metrics.metric_monitor
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+metrics.psnr module
+-------------------
+
+.. automodule:: metrics.psnr
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+metrics.stats module
+--------------------
+
+.. automodule:: metrics.stats
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+metrics.topk\_accuracy module
+-----------------------------
+
+.. automodule:: metrics.topk_accuracy
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: metrics
+   :members:
+   :undoc-members:
+   :show-inheritance:
