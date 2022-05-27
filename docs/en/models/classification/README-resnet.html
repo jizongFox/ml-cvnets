@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Training Classification Models on the ImageNet dataset &mdash; CVNets: A library for training computer vision networks  documentation</title>
+  <title>Training ResNets on the ImageNet dataset &mdash; CVNets: A library for training computer vision networks  documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -17,7 +17,7 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Training Classification Models on the ImageNet dataset" href="README-mobilenets.html" />
+    <link rel="next" title="Training MobileNets on the ImageNet dataset" href="README-mobilenets.html" />
     <link rel="prev" title="Sample Recipes" href="../../../sample_recipes.html" /> 
 </head>
 
@@ -40,13 +40,14 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../../sample_recipes.html">Sample Recipes</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Training Classification Models on the ImageNet dataset</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#training-resnets-on-the-imagenet-dataset">Training ResNets on the ImageNet dataset</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Training ResNets on the ImageNet dataset</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#citation">Citation</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="README-mobilenets.html">Training Classification Models on the ImageNet dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README-mobilenets.html">Training MobileNets on the ImageNet dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README-mobilevit.html">Training MobileViT on the ImageNet dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="README-mobilevit-v2.html">Training MobileViTv2 Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README-vit.html">Training Visual Transformer on the ImageNet dataset</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how_to.html">How To</a></li>
@@ -69,7 +70,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../../sample_recipes.html">Sample Recipes</a> &raquo;</li>
-      <li>Training Classification Models on the ImageNet dataset</li>
+      <li>Training ResNets on the ImageNet dataset</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/en/models/classification/README-resnet.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -79,10 +80,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="tex2jax_ignore mathjax_ignore section" id="training-classification-models-on-the-imagenet-dataset">
-<h1>Training Classification Models on the ImageNet dataset<a class="headerlink" href="#training-classification-models-on-the-imagenet-dataset" title="Permalink to this headline"></a></h1>
-<div class="section" id="training-resnets-on-the-imagenet-dataset">
-<h2>Training ResNets on the ImageNet dataset<a class="headerlink" href="#training-resnets-on-the-imagenet-dataset" title="Permalink to this headline"></a></h2>
+  <div class="tex2jax_ignore mathjax_ignore section" id="training-resnets-on-the-imagenet-dataset">
+<h1>Training ResNets on the ImageNet dataset<a class="headerlink" href="#training-resnets-on-the-imagenet-dataset" title="Permalink to this headline"></a></h1>
 <p>Single node 8-GPU training of <code class="docutils literal notranslate"><span class="pre">ResNet-50</span></code> with <code class="docutils literal notranslate"><span class="pre">simple</span> <span class="pre">training</span> <span class="pre">recipe</span></code> can be done using below command:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export CFG_FILE=&quot;config/classification/imagenet/resnet.yaml&quot;
 cvnets-train --common.config-file $CFG_FILE --common.results-loc classification_results
@@ -108,7 +107,6 @@ cvnets-train --common.config-file $CFG_FILE --common.results-loc classification_
 </pre></div>
 </div>
 </details>
-</div>
 <div class="section" id="citation">
 <h2>Citation<a class="headerlink" href="#citation" title="Permalink to this headline"></a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@inproceedings</span><span class="p">{</span><span class="n">he2016deep</span><span class="p">,</span>
@@ -128,7 +126,7 @@ cvnets-train --common.config-file $CFG_FILE --common.results-loc classification_
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../../../sample_recipes.html" class="btn btn-neutral float-left" title="Sample Recipes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="README-mobilenets.html" class="btn btn-neutral float-right" title="Training Classification Models on the ImageNet dataset" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="README-mobilenets.html" class="btn btn-neutral float-right" title="Training MobileNets on the ImageNet dataset" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

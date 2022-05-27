@@ -1,6 +1,4 @@
-# Training Classification Models on the ImageNet dataset
-
-## Training Visual Transformer on the ImageNet dataset
+# Training Visual Transformer on the ImageNet dataset
 
 Single node 4-GPU training of `ViT-Tiny` can be done using below command:
 
