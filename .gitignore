@@ -6,7 +6,7 @@ results*
 *.png
 *.jpg
 .idea
-
+venv
 results*
 vision_datasets/
 exp_results/
