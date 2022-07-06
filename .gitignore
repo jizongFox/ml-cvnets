@@ -12,7 +12,7 @@ vision_datasets/
 exp_results/
 exp_results*
 results_*
-
+onnx
 
 *.so
 model_zoo

@@ -12,6 +12,7 @@ import cv2
 
 from utils import logger
 from options.opts import get_training_arguments
+from utils.benchmark import pytorch_throughput_latency, onnx_throughput_latency
 from utils.common_utils import device_setup, create_directories
 from utils.ddp_utils import is_master, distributed_init
 from cvnets import get_model, EMA
@@ -38,6 +39,13 @@ def main(opts, **kwargs):
 
     is_master_node = is_master(opts)
 
+    # set-up the model
+    model = get_model(opts)
+
+    pytorch_throughput_latency(model=model, )
+
+    onnx_throughput_latency(model, )
+    exit(0)
     # set-up data loaders
     train_loader, val_loader, train_sampler = create_train_val_loader(opts)
 
@@ -62,8 +70,6 @@ def main(opts, **kwargs):
         max_epochs = getattr(opts, "scheduler.max_epochs", DEFAULT_EPOCHS)
         if is_master_node:
             logger.log("Max. epochs for training: {}".format(max_epochs))
-    # set-up the model
-    model = get_model(opts)
 
     # memory format
     memory_format = (
